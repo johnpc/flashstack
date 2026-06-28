@@ -7,9 +7,11 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
+import { checkmarkDoneCircleOutline } from 'ionicons/icons';
 import { Link, useParams } from 'react-router-dom';
 import { useStudy } from './useStudy';
 import { StudyCard } from './StudyCard';
+import { EmptyState } from '../shell/EmptyState';
 import './study.css';
 
 /** Play screen: walk the deck's study queue, self-grading each card. */
@@ -47,13 +49,16 @@ export function Study() {
             />
           </>
         ) : (
-          <div data-testid="study-done">
-            <p className="fs-heading">All caught up! 🎉</p>
-            <p className="fs-muted">No cards due right now. Come back later.</p>
-            <Link to={`/decks/${id}`} className="study__back-link">
+          <EmptyState
+            icon={checkmarkDoneCircleOutline}
+            title="All caught up!"
+            message="No cards are due right now. Come back later to keep your streak going."
+            testId="study-done"
+          >
+            <Link to={`/decks/${id}`} className="empty-state__cta">
               Back to deck
             </Link>
-          </div>
+          </EmptyState>
         )}
       </IonContent>
     </IonPage>

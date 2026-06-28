@@ -1,7 +1,9 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { libraryOutline, compassOutline } from 'ionicons/icons';
 import { Link } from 'react-router-dom';
 import { useMyDecks } from './useMyDecks';
 import { TabBar } from '../shell/TabBar';
+import { EmptyState } from '../shell/EmptyState';
 import './mydecks.css';
 
 /** "My Decks" — the signed-in user's saved decks. Renders only. */
@@ -16,22 +18,36 @@ export function MyDecks() {
       </IonHeader>
       <IonContent className="ion-padding">
         {!isAuthenticated ? (
-          <p className="fs-muted" data-testid="signed-out">
-            <Link to="/signin">Sign in</Link> to save decks and study them.
-          </p>
+          <EmptyState
+            icon={libraryOutline}
+            title="Your library awaits"
+            message="Sign in to save decks and track your progress with spaced repetition."
+            testId="signed-out"
+          >
+            <Link to="/signin" className="empty-state__cta">
+              Sign in
+            </Link>
+          </EmptyState>
         ) : isLoading ? (
           <p className="fs-muted">Loading your decks…</p>
         ) : decks.length === 0 ? (
-          <p className="fs-muted" data-testid="empty-my-decks">
-            No saved decks yet — find one in Discover.
-          </p>
+          <EmptyState
+            icon={compassOutline}
+            title="No saved decks yet"
+            message="Find a deck in Discover and add it to start studying."
+            testId="empty-my-decks"
+          >
+            <Link to="/discover" className="empty-state__cta">
+              Browse Discover
+            </Link>
+          </EmptyState>
         ) : (
           <ul className="my-decks" aria-label="Saved decks">
             {decks.map((deck) => (
               <li key={deck.id} data-testid="my-deck">
                 <Link to={`/decks/${deck.deckId}`} className="my-decks__row">
                   <span className="fs-heading my-decks__topic">{deck.topic}</span>
-                  <span className="fs-muted">{deck.cardCount ?? 0} cards</span>
+                  <span className="my-decks__count">{deck.cardCount ?? 0} cards</span>
                 </Link>
               </li>
             ))}

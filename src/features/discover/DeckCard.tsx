@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { IonIcon } from '@ionic/react';
+import { layersOutline } from 'ionicons/icons';
 import { useMediaUrl } from '../../lib/useMediaUrl';
 import type { DeckCardData } from './composeDecks';
 
@@ -11,7 +13,9 @@ export function DeckCard({ deck }: { deck: DeckCardData }) {
         {coverUrl ? (
           <img className="deck-card__img" src={coverUrl} alt="" />
         ) : (
-          <div className="deck-card__placeholder" aria-hidden="true" />
+          <div className="deck-card__placeholder" aria-hidden="true">
+            <IonIcon icon={layersOutline} />
+          </div>
         )}
       </div>
       <h3 className="deck-card__topic fs-heading">{deck.topic}</h3>

@@ -4,7 +4,7 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .my-decks__row {
@@ -15,10 +15,26 @@
   background: var(--fs-surface);
   border: 1px solid var(--fs-border);
   border-radius: var(--fs-radius);
+  box-shadow: var(--fs-shadow);
   padding: 16px;
   text-decoration: none;
+  transition: transform 0.12s ease;
+}
+
+.my-decks__row:active {
+  transform: scale(0.985);
 }
 
 .my-decks__topic {
-  font-size: 1rem;
+  font-size: 1.02rem;
+}
+
+.my-decks__count {
+  flex: 0 0 auto;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--fs-accent-strong);
+  background: var(--fs-accent-soft);
+  padding: 4px 10px;
+  border-radius: 999px;
 }

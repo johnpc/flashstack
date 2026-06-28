@@ -34,9 +34,10 @@ describe('Discover', () => {
     expect(screen.getAllByTestId('shelf')).toHaveLength(1);
   });
 
-  it('shows a loading state while shelves load', () => {
+  it('shows skeleton placeholders while shelves load', () => {
     hook.value = { data: undefined as never, isLoading: true };
-    renderDiscover();
-    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+    const { container } = renderDiscover();
+    expect(container.querySelectorAll('.discover__shelf--skeleton').length).toBeGreaterThan(0);
+    expect(screen.queryAllByTestId('shelf')).toHaveLength(0);
   });
 });

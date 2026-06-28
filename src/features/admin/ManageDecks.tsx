@@ -30,21 +30,40 @@ export function ManageDecks() {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <GenerateDeckForm onGenerate={gen.generate} />
-        <GenerationRuns runs={gen.runs} />
-        <NewDeckForm onCreate={create} />
+        <section className="admin-panel admin-panel--accent">
+          <h2 className="admin-panel__title">✨ Generate with AI</h2>
+          <p className="fs-muted admin-panel__hint">
+            Describe a topic and Claude writes the cards, with images and audio.
+          </p>
+          <GenerateDeckForm onGenerate={gen.generate} />
+          <GenerationRuns runs={gen.runs} />
+        </section>
+
+        <section className="admin-panel">
+          <h2 className="admin-panel__title">Create a blank deck</h2>
+          <NewDeckForm onCreate={create} />
+        </section>
+
+        <h2 className="admin-panel__title admin-decks__heading">All decks</h2>
         {isLoading ? (
           <p className="fs-muted">Loading…</p>
+        ) : decks.length === 0 ? (
+          <p className="fs-muted">No decks yet — generate or create one above.</p>
         ) : (
           <ul className="admin-decks" aria-label="All decks">
             {decks.map((d) => (
               <li key={d.id} className="admin-decks__row" data-testid="admin-deck">
-                <Link to={`/admin/decks/${d.id}`} className="admin-decks__topic fs-heading">
-                  {d.topic}
-                </Link>
-                <span className="admin-decks__status" data-testid="deck-status">
-                  {d.status}
-                </span>
+                <div className="admin-decks__main">
+                  <Link to={`/admin/decks/${d.id}`} className="admin-decks__topic fs-heading">
+                    {d.topic}
+                  </Link>
+                  <span
+                    className={`admin-badge admin-badge--${(d.status ?? 'DRAFT').toLowerCase()}`}
+                    data-testid="deck-status"
+                  >
+                    {d.status}
+                  </span>
+                </div>
                 <div className="admin-decks__actions">
                   <button
                     type="button"
