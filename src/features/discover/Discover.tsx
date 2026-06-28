@@ -1,4 +1,5 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { Link } from 'react-router-dom';
 import { useShelves } from './useShelves';
 import { TabBar } from '../shell/TabBar';
 import './discover.css';
@@ -20,8 +21,10 @@ export function Discover() {
         ) : (
           <ul className="discover__shelves" aria-label="Categories">
             {(shelves ?? []).map((shelf) => (
-              <li key={shelf.slug} className="discover__shelf" data-testid="shelf">
-                <span className="fs-kicker">{shelf.title}</span>
+              <li key={shelf.slug} data-testid="shelf">
+                <Link to={`/discover/${shelf.slug}`} className="discover__shelf">
+                  <span className="fs-kicker">{shelf.title}</span>
+                </Link>
               </li>
             ))}
           </ul>

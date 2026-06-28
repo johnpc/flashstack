@@ -24,3 +24,5 @@ export async function readAuthMode(): Promise<'userPool' | 'identityPool'> {
 }
 
 export type CategoryRecord = Schema['Category']['type'];
+export type DeckRecord = Schema['Deck']['type'];
+export type CardRecord = Schema['Card']['type'];

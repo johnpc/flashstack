@@ -12,3 +12,9 @@ Feature: Discover shelves
     Then they are taken to the Discover tab
     And a category shelf "Languages" is visible
     And a category shelf "Myths & Legends" is visible
+
+  Scenario: Opening a shelf shows its published decks
+    Given a visitor opens the app at the root
+    When they open the "Languages" shelf
+    Then a deck titled "Top Spanish Phrases" is visible
+    And that deck shows its card count

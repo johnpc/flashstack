@@ -1,6 +1,7 @@
 import { Redirect, Route } from 'react-router-dom';
 import { IonRouterOutlet } from '@ionic/react';
 import { Discover } from './features/discover/Discover';
+import { CategoryDecks } from './features/discover/CategoryDecks';
 
 /** App routes. Tabs + screens grow per slice; Discover is the launch surface. */
 export function AppRoutes() {
@@ -8,6 +9,9 @@ export function AppRoutes() {
     <IonRouterOutlet>
       <Route exact path="/discover">
         <Discover />
+      </Route>
+      <Route exact path="/discover/:slug">
+        <CategoryDecks />
       </Route>
       <Route exact path="/">
         <Redirect to="/discover" />

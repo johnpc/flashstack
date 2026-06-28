@@ -2,8 +2,10 @@
 import { client, EDITOR_WRITE, clearOneModel } from './seedClient';
 import { seedCategories } from './fixtures/categories';
 
-/** Wipe every model. Grows as later slices add Deck/Card/etc. */
+/** Wipe every model. Cards reference Decks, so clear Cards first. */
 export async function clearAll(): Promise<void> {
+  await clearOneModel(client.models.Card);
+  await clearOneModel(client.models.Deck);
   await clearOneModel(client.models.Category);
 }
 

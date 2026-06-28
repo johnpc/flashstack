@@ -13,8 +13,52 @@
 }
 
 .discover__shelf {
+  display: block;
   background: var(--fs-surface);
   border: 1px solid var(--fs-border);
   border-radius: var(--fs-radius);
   padding: 18px 16px;
+  text-decoration: none;
+}
+
+.deck-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--fs-gap);
+}
+
+.deck-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.deck-card__cover {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--fs-radius);
+  overflow: hidden;
+  background: var(--fs-surface);
+  border: 1px solid var(--fs-border);
+}
+
+.deck-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.deck-card__placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--fs-surface), var(--fs-border));
+}
+
+.deck-card__topic {
+  font-size: 1rem;
+  margin: 8px 0 2px;
+}
+
+.deck-card__count {
+  font-size: 0.8rem;
+  margin: 0;
 }

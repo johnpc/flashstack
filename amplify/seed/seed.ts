@@ -11,6 +11,7 @@
 import { signIn, signOut } from 'aws-amplify/auth';
 import './seedClient'; // configures Amplify + loads .env.local
 import { clearAll, seedReferenceData } from './seedReference';
+import { seedDeckData } from './seedDecks';
 
 async function main() {
   const username = process.env.TEST_USERNAME;
@@ -27,6 +28,7 @@ async function main() {
   console.log('Cleared all models.');
 
   await seedReferenceData();
+  await seedDeckData();
 
   await signOut().catch(() => {});
   console.log('Seed complete.');
