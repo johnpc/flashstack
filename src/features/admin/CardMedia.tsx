@@ -1,6 +1,7 @@
 import { IonIcon } from '@ionic/react';
 import { imageOutline } from 'ionicons/icons';
 import { useMediaUrl } from '../../lib/useMediaUrl';
+import { AudioButton } from '../shell/AudioButton';
 
 /** Image preview + audio player for a card in the editor. Resolves S3 keys to
  * URLs; shows a placeholder when a card has no image/audio yet. */
@@ -12,7 +13,6 @@ export function CardMedia({
   audioPath?: string | null;
 }) {
   const imageUrl = useMediaUrl(imagePath);
-  const audioUrl = useMediaUrl(audioPath);
   return (
     <div className="card-media" data-testid="card-media">
       {imageUrl ? (
@@ -22,11 +22,7 @@ export function CardMedia({
           <IonIcon icon={imageOutline} />
         </div>
       )}
-      {audioUrl && (
-        <audio className="card-media__audio" controls src={audioUrl} data-testid="card-media-audio">
-          <track kind="captions" />
-        </audio>
-      )}
+      <AudioButton audioPath={audioPath} />
     </div>
   );
 }

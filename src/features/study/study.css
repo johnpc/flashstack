@@ -67,6 +67,12 @@
   margin: 0 auto 16px;
 }
 
+.study-card .audio-btn {
+  width: 100%;
+  height: 36px;
+  margin: 4px 0 12px;
+}
+
 .study-card__grades {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

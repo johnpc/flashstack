@@ -1,4 +1,5 @@
 import { useMediaUrl } from '../../lib/useMediaUrl';
+import { AudioButton } from '../shell/AudioButton';
 import type { CardRecord } from '../../lib/dataClient';
 
 /** Grade scale shown after the answer is revealed (SM-2 0–5, labelled). */
@@ -37,6 +38,7 @@ export function StudyCard({ card, revealed, direction, onReveal, onGrade }: Stud
           <p className="fs-card-face study-card__back">{answer}</p>
           {card.hint && <p className="fs-muted study-card__hint">{card.hint}</p>}
           {card.example && <p className="study-card__example">{card.example}</p>}
+          <AudioButton audioPath={card.audioPath} />
           <div className="study-card__grades">
             {GRADES.map((g) => (
               <button
