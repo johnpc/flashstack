@@ -112,6 +112,24 @@
 .gen-runs__status--running {
   color: var(--fs-accent-strong);
   background: var(--fs-accent-soft);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gen-runs__spinner {
+  width: 11px;
+  height: 11px;
+  border: 2px solid color-mix(in srgb, var(--fs-accent) 35%, transparent);
+  border-top-color: var(--fs-accent-strong);
+  border-radius: 50%;
+  animation: gen-spin 0.7s linear infinite;
+}
+
+@keyframes gen-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .gen-runs__status--draft_ready {

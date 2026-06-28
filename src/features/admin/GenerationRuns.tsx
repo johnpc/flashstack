@@ -12,11 +12,15 @@ export function GenerationRuns({ runs }: { runs: GenerationRunRecord[] }) {
             className={`gen-runs__status gen-runs__status--${(r.status ?? 'RUNNING').toLowerCase()}`}
             data-testid="gen-run-status"
           >
-            {r.status === 'DRAFT_READY'
-              ? `Ready · ${r.generatedCount}/${r.requestedCount}`
-              : r.status === 'FAILED'
-                ? 'Failed'
-                : 'Generating…'}
+            {r.status === 'DRAFT_READY' ? (
+              `Ready · ${r.generatedCount}/${r.requestedCount}`
+            ) : r.status === 'FAILED' ? (
+              'Failed'
+            ) : (
+              <>
+                <span className="gen-runs__spinner" aria-hidden="true" /> Generating…
+              </>
+            )}
           </span>
         </li>
       ))}
