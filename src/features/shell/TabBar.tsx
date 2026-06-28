@@ -7,7 +7,7 @@ import './tabBar.css';
 const TABS: { label: string; icon: string; to?: string }[] = [
   { label: 'Discover', icon: compassOutline, to: '/discover' },
   { label: 'My Decks', icon: libraryOutline, to: '/my-decks' },
-  { label: 'You', icon: personOutline },
+  { label: 'You', icon: personOutline, to: '/you' },
 ];
 
 export function TabBar({ active = 'Discover' }: { active?: string }) {

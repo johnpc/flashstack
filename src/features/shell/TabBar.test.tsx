@@ -17,12 +17,11 @@ describe('TabBar', () => {
     expect(screen.getByRole('link', { name: 'Discover' })).toHaveAttribute('aria-current', 'page');
   });
 
-  it('renders wired tabs as links and placeholders as buttons', () => {
+  it('renders all three tabs as wired links', () => {
     renderTabBar('Discover');
     expect(screen.getByRole('link', { name: 'Discover' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'My Decks' })).toBeInTheDocument();
-    // "You" is not wired yet — still a placeholder button.
-    expect(screen.getByRole('button', { name: 'You' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'You' })).toHaveAttribute('href', '/you');
   });
 
   it('defaults the active tab to Discover', () => {
