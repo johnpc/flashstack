@@ -99,6 +99,27 @@ const schema = a.schema({
     // Per-user lookup of a deck's saved state, scoped by owner at the row level.
     .secondaryIndexes((index) => [index('deckId')])
     .authorization((allow) => [allow.owner()]),
+
+  // Per-(user, card) SM-2 spaced-repetition state. Per-user, owner authz
+  // (userPool) — a user only reads/writes their own reviews. The play session
+  // queries this user's due reviews for a deck via the deckId(dueAt) GSI, then
+  // merges with the deck's Cards (untracked card = new). On each self-grade the
+  // client computes sm2() and upserts the row. Read/write with userPool auth or
+  // the owner rule returns empty (ADR 0004).
+  UserCardReview: a
+    .model({
+      cardId: a.id().required(),
+      deckId: a.id().required(),
+      easeFactor: a.float().default(2.5),
+      intervalDays: a.integer().default(0),
+      repetitions: a.integer().default(0),
+      dueAt: a.datetime().required(),
+      lastGrade: a.integer(),
+      lastReviewedAt: a.datetime(),
+    })
+    // The due-cards read path: this user's reviews for a deck, soonest-due first.
+    .secondaryIndexes((index) => [index('deckId').sortKeys(['dueAt'])])
+    .authorization((allow) => [allow.owner()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;

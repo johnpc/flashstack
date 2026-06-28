@@ -3,6 +3,7 @@ import { IonRouterOutlet } from '@ionic/react';
 import { Discover } from './features/discover/Discover';
 import { CategoryDecks } from './features/discover/CategoryDecks';
 import { DeckDetail } from './features/deck/DeckDetail';
+import { Study } from './features/study/Study';
 import { MyDecks } from './features/mydecks/MyDecks';
 import { SignIn } from './features/auth/SignIn';
 import { SignUp } from './features/auth/SignUp';
@@ -19,6 +20,9 @@ export function AppRoutes() {
       </Route>
       <Route exact path="/decks/:id">
         <DeckDetail />
+      </Route>
+      <Route exact path="/decks/:id/study">
+        <Study />
       </Route>
       <Route exact path="/my-decks">
         <MyDecks />

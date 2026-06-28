@@ -6,6 +6,7 @@ import { seedCategories } from './fixtures/categories';
  * as the editor/test user, so it also clears that user's own UserDeck rows
  * (owner-scoped) — keeping the shared e2e account from accumulating saves. */
 export async function clearAll(): Promise<void> {
+  await clearOneModel(client.models.UserCardReview);
   await clearOneModel(client.models.UserDeck);
   await clearOneModel(client.models.Card);
   await clearOneModel(client.models.Deck);

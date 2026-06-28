@@ -3,6 +3,25 @@
   margin: 0 0 8px;
 }
 
+.deck__actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.deck__study {
+  margin: 14px 0;
+  background: var(--fs-surface);
+  color: var(--fs-accent);
+  border: 1px solid var(--fs-accent);
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
 .save-deck-btn {
   display: inline-block;
   margin: 14px 0;

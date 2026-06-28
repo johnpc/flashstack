@@ -7,7 +7,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useDeckDetail } from './useDeckDetail';
 import { SaveDeckButton } from '../mydecks/SaveDeckButton';
 import './deck.css';
@@ -36,15 +36,20 @@ export function DeckDetail() {
               {deck.topic}
             </h1>
             {deck.description && <p className="fs-muted">{deck.description}</p>}
-            <SaveDeckButton
-              deck={{
-                deckId: deck.id,
-                topic: deck.topic,
-                categorySlug: deck.categorySlug,
-                cardCount: deck.cardCount,
-                coverImagePath: deck.coverImagePath,
-              }}
-            />
+            <div className="deck__actions">
+              <SaveDeckButton
+                deck={{
+                  deckId: deck.id,
+                  topic: deck.topic,
+                  categorySlug: deck.categorySlug,
+                  cardCount: deck.cardCount,
+                  coverImagePath: deck.coverImagePath,
+                }}
+              />
+              <Link to={`/decks/${deck.id}/study`} className="deck__study" data-testid="study-link">
+                Study
+              </Link>
+            </div>
             <ul className="deck__cards" aria-label="Cards">
               {(data?.cards ?? []).map((card) => (
                 <li key={card.id} className="deck__card-row" data-testid="card-row">

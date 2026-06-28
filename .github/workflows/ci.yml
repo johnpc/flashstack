@@ -117,6 +117,8 @@ jobs:
             paths: .features-gen/e2e/features/discover
           - name: my-decks
             paths: .features-gen/e2e/features/mydecks
+          - name: study
+            paths: .features-gen/e2e/features/study
     steps:
       - uses: actions/checkout@v7
 

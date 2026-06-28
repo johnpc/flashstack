@@ -1,0 +1,80 @@
+.study__progress {
+  text-align: center;
+  font-size: 0.85rem;
+  margin: 0 0 16px;
+}
+
+.study-card {
+  background: var(--fs-surface);
+  border: 1px solid var(--fs-border);
+  border-radius: var(--fs-radius);
+  padding: 28px 20px;
+  text-align: center;
+}
+
+.study-card__front {
+  font-size: 1.6rem;
+  margin: 12px 0 24px;
+}
+
+.study-card__reveal {
+  background: var(--fs-accent);
+  color: var(--fs-accent-contrast);
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.study-card__back {
+  font-size: 1.3rem;
+  margin: 0 0 8px;
+  color: var(--fs-accent);
+}
+
+.study-card__example {
+  font-style: italic;
+  color: var(--fs-text-muted);
+  margin: 4px 0;
+}
+
+.study-card__img {
+  max-width: 100%;
+  border-radius: 10px;
+  margin: 12px 0;
+}
+
+.study-card__grades {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.study-card__grade {
+  border: 1px solid var(--fs-border);
+  border-radius: 10px;
+  padding: 12px 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--fs-surface);
+  color: var(--fs-text);
+}
+
+.study-card__grade--correct {
+  border-color: var(--fs-correct);
+  color: var(--fs-correct);
+}
+
+.study-card__grade--incorrect {
+  border-color: var(--fs-incorrect);
+  color: var(--fs-incorrect);
+}
+
+.study__back-link {
+  display: inline-block;
+  margin-top: 16px;
+  color: var(--fs-accent);
+  font-weight: 600;
+}
