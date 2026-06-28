@@ -26,7 +26,10 @@ env:
 jobs:
   deploy:
     name: Deploy to App Store Connect
-    runs-on: macos-26-xlarge
+    # Standard GitHub-hosted macOS runner. The xlarge variant is a paid large
+    # runner that began failing to allocate (3s, no steps — likely a spend cap);
+    # macos-latest is always allocatable. Archive is slower but reliable.
+    runs-on: macos-latest
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v7
