@@ -121,6 +121,8 @@ jobs:
             paths: .features-gen/e2e/features/study
           - name: admin
             paths: .features-gen/e2e/features/admin
+          - name: journey
+            paths: .features-gen/e2e/features/journey
     steps:
       - uses: actions/checkout@v7
 
