@@ -28,6 +28,18 @@ describe('myDecksApi', () => {
     expect(decks.map((d) => d.topic)).toEqual(['New', 'Old']);
   });
 
+  it('dedupes multiple rows for the same deck, keeping the newest', async () => {
+    m.list.mockResolvedValue({
+      data: [
+        { id: '1', deckId: 'd1', topic: 'Spanish (old)', addedAt: '2026-01-01' },
+        { id: '2', deckId: 'd1', topic: 'Spanish (new)', addedAt: '2026-03-01' },
+      ],
+    });
+    const decks = await fetchMyDecks();
+    expect(decks).toHaveLength(1);
+    expect(decks[0].topic).toBe('Spanish (new)');
+  });
+
   it('findMyDeck filters by deckId and returns the first match', async () => {
     m.list.mockResolvedValue({ data: [{ id: 'x', deckId: 'd1' }] });
     const row = await findMyDeck('d1');

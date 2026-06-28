@@ -16,10 +16,16 @@ export interface SaveDeckInput {
   coverImagePath?: string | null;
 }
 
-/** The current user's saved decks, newest first. */
+/**
+ * The current user's saved decks, newest first and deduped by deckId. A user
+ * can hold several UserDeck rows for the same deck (re-adds, races), so the
+ * library shows each deck once — the newest row wins after the sort.
+ */
 export async function fetchMyDecks(): Promise<UserDeckRecord[]> {
   const { data } = await dataClient.models.UserDeck.list({ limit: 500, ...USER_POOL });
-  return [...data].sort((a, b) => (b.addedAt ?? '').localeCompare(a.addedAt ?? ''));
+  const newestFirst = [...data].sort((a, b) => (b.addedAt ?? '').localeCompare(a.addedAt ?? ''));
+  const seen = new Set<string>();
+  return newestFirst.filter((d) => !seen.has(d.deckId) && seen.add(d.deckId));
 }
 
 /** The current user's saved row(s) for a deck (usually 0 or 1). */

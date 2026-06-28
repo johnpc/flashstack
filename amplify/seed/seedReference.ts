@@ -2,8 +2,11 @@
 import { client, EDITOR_WRITE, clearOneModel } from './seedClient';
 import { seedCategories } from './fixtures/categories';
 
-/** Wipe every model. Cards reference Decks, so clear Cards first. */
+/** Wipe every model. Cards reference Decks, so clear Cards first. The seed runs
+ * as the editor/test user, so it also clears that user's own UserDeck rows
+ * (owner-scoped) — keeping the shared e2e account from accumulating saves. */
 export async function clearAll(): Promise<void> {
+  await clearOneModel(client.models.UserDeck);
   await clearOneModel(client.models.Card);
   await clearOneModel(client.models.Deck);
   await clearOneModel(client.models.Category);
