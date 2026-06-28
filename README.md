@@ -96,16 +96,17 @@ npm run seed           # seed Discover categories (needs an editor TEST_USERNAME
 Flashstack enforces strict quality requirements. Every gate runs in CI on PRs to `main`, and the
 blocking gates also run locally on every commit via a Husky pre-commit hook.
 
-| Command                 | What it checks                                                                |
-| ----------------------- | ----------------------------------------------------------------------------- |
-| `npm run lint`          | ESLint — including `no-explicit-any: error` (no `any`, ever)                  |
-| `npm run format:check`  | Prettier formatting                                                           |
-| `npm run check:lines`   | File-length discipline — every `.ts`/`.tsx` source file stays ≤ 100 lines     |
-| `npm run test:coverage` | Vitest unit tests with an **80% floor** (statements/branches/functions/lines) |
-| `npm run crap`          | **CRAP score** per function — fails any function over **15**                  |
-| `npm run build`         | TypeScript + Vite production build                                            |
-| `npm run test:e2e`      | **Gherkin** acceptance tests via Playwright + playwright-bdd                  |
-| `npm run quality`       | Runs the full local gate in sequence                                          |
+| Command                  | What it checks                                                                    |
+| ------------------------ | --------------------------------------------------------------------------------- |
+| `npm run lint`           | ESLint — including `no-explicit-any: error` (no `any`, ever)                      |
+| `npm run format:check`   | Prettier formatting                                                               |
+| `npm run check:lines`    | File-length discipline — every `.ts`/`.tsx` source file stays ≤ 100 lines         |
+| `npm run check:features` | Every `.feature` file is mapped to a CI acceptance area (no silently-unrun specs) |
+| `npm run test:coverage`  | Vitest unit tests with an **80% floor** (statements/branches/functions/lines)     |
+| `npm run crap`           | **CRAP score** per function — fails any function over **15**                      |
+| `npm run build`          | TypeScript + Vite production build                                                |
+| `npm run test:e2e`       | **Gherkin** acceptance tests via Playwright + playwright-bdd                      |
+| `npm run quality`        | Runs the full local gate in sequence                                              |
 
 All acceptance tests are written as Gherkin `.feature` files — never raw spec code. The fix for low
 coverage is always a new test, never an exclusion.

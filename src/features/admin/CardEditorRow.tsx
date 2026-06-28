@@ -7,10 +7,11 @@ interface Props {
   onSave: (input: CardInput) => void;
   onDelete: () => void;
   onMove: (direction: 'up' | 'down') => void;
+  onRegenerate: (kind: 'image' | 'audio') => void;
 }
 
-/** One editable card row: inline front/back fields, save/delete/reorder. */
-export function CardEditorRow({ card, onSave, onDelete, onMove }: Props) {
+/** One editable card row: inline front/back fields, save/delete/reorder/regen. */
+export function CardEditorRow({ card, onSave, onDelete, onMove, onRegenerate }: Props) {
   const [front, setFront] = useState(card.front);
   const [back, setBack] = useState(card.back);
   const dirty = front !== card.front || back !== card.back;
@@ -40,6 +41,12 @@ export function CardEditorRow({ card, onSave, onDelete, onMove }: Props) {
         </button>
         <button type="button" disabled={!dirty} onClick={() => onSave({ front, back })}>
           Save
+        </button>
+        <button type="button" aria-label="Regenerate image" onClick={() => onRegenerate('image')}>
+          🖼
+        </button>
+        <button type="button" aria-label="Regenerate audio" onClick={() => onRegenerate('audio')}>
+          🔊
         </button>
         <button type="button" className="card-edit__del" onClick={onDelete}>
           Delete

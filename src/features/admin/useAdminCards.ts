@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchDeckDetail } from '../deck/deckDetailApi';
 import { addCard, updateCard, deleteCard, setCardOrder, type CardInput } from './adminCardApi';
+import { regenerateCardMedia } from './generateApi';
 import { reorderCards } from './reorderCards';
 import type { CardRecord } from '../../lib/dataClient';
 
@@ -34,6 +35,11 @@ export function useAdminCards(deckId: string | undefined) {
     },
     onSuccess: invalidate,
   });
+  const regen = useMutation({
+    mutationFn: ({ id, kind }: { id: string; kind: 'image' | 'audio' }) =>
+      regenerateCardMedia(id, kind),
+    onSuccess: invalidate,
+  });
 
   return {
     deck: query.data?.deck ?? null,
@@ -43,6 +49,7 @@ export function useAdminCards(deckId: string | undefined) {
     edit: edit.mutate,
     remove: remove.mutate,
     move: move.mutate,
+    regenerate: regen.mutate,
   };
 }
 

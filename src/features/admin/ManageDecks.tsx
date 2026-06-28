@@ -9,12 +9,16 @@ import {
 } from '@ionic/react';
 import { Link } from 'react-router-dom';
 import { useAdminDecks } from './useAdminDecks';
+import { useGenerateDeck } from './useGenerateDeck';
 import { NewDeckForm } from './NewDeckForm';
+import { GenerateDeckForm } from './GenerateDeckForm';
+import { GenerationRuns } from './GenerationRuns';
 import './admin.css';
 
 /** Admin: list every deck (any status), create new ones, publish/delete. */
 export function ManageDecks() {
   const { decks, isLoading, create, setPublished, remove } = useAdminDecks();
+  const gen = useGenerateDeck();
   return (
     <IonPage>
       <IonHeader>
@@ -26,6 +30,8 @@ export function ManageDecks() {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
+        <GenerateDeckForm onGenerate={gen.generate} />
+        <GenerationRuns runs={gen.runs} />
         <NewDeckForm onCreate={create} />
         {isLoading ? (
           <p className="fs-muted">Loading…</p>

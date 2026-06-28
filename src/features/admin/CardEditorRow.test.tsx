@@ -6,7 +6,13 @@ import type { CardRecord } from '../../lib/dataClient';
 const card = { id: 'c1', deckId: 'd1', ord: 0, front: 'Hola', back: 'Hello' } as CardRecord;
 
 function renderRow(overrides = {}) {
-  const props = { onSave: vi.fn(), onDelete: vi.fn(), onMove: vi.fn(), ...overrides };
+  const props = {
+    onSave: vi.fn(),
+    onDelete: vi.fn(),
+    onMove: vi.fn(),
+    onRegenerate: vi.fn(),
+    ...overrides,
+  };
   render(<CardEditorRow card={card} {...props} />);
   return props;
 }
@@ -28,5 +34,13 @@ describe('CardEditorRow', () => {
     expect(onMove).toHaveBeenCalledWith('up');
     fireEvent.click(screen.getByLabelText('Move down'));
     expect(onMove).toHaveBeenCalledWith('down');
+  });
+
+  it('regenerates image and audio via the callback', () => {
+    const { onRegenerate } = renderRow();
+    fireEvent.click(screen.getByLabelText('Regenerate image'));
+    expect(onRegenerate).toHaveBeenCalledWith('image');
+    fireEvent.click(screen.getByLabelText('Regenerate audio'));
+    expect(onRegenerate).toHaveBeenCalledWith('audio');
   });
 });

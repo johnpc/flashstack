@@ -1,4 +1,6 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
+import { generateDeckStarter } from '../deckgen/start/resource';
+import { regenerateMedia } from '../deckgen/regenerate/resource';
 
 /**
  * Flashstack data schema.
@@ -120,6 +122,52 @@ const schema = a.schema({
     // The due-cards read path: this user's reviews for a deck, soonest-due first.
     .secondaryIndexes((index) => [index('deckId').sortKeys(['dueAt'])])
     .authorization((allow) => [allow.owner()]),
+
+  // One AI deck-generation run — the admin dashboard reads these (stoop's
+  // SyncRun analogue). The starter mutation creates a RUNNING row; the worker
+  // flips it to DRAFT_READY (deck filled, awaiting edit/publish) or FAILED.
+  GenerationRun: a
+    .model({
+      topic: a.string().required(),
+      categorySlug: a.string().required(),
+      voiceLanguage: a.string(),
+      requestedCount: a.integer().default(0),
+      generatedCount: a.integer().default(0),
+      deckId: a.id(),
+      status: a.enum(['RUNNING', 'DRAFT_READY', 'FAILED']),
+      statusReason: a.string(),
+      startedAt: a.datetime(),
+    })
+    .authorization((allow) => [
+      allow.guest().to(['read']),
+      allow.authenticated('identityPool').to(['read']),
+      allow.authenticated().to(['read']),
+      allow.group('editors').to(['create', 'update', 'delete']),
+    ]),
+
+  // Admin-initiated deck generation. Returns a runId immediately; the starter
+  // Lambda creates the GenerationRun + a DRAFT Deck, then async-invokes the
+  // worker (Bedrock cards -> per-card image+audio -> write cards). Editors only.
+  generateDeck: a
+    .mutation()
+    .arguments({
+      topic: a.string().required(),
+      categorySlug: a.string().required(),
+      cardCount: a.integer().required(),
+      voiceLanguage: a.string().required(),
+    })
+    .returns(a.customType({ runId: a.string().required(), deckId: a.string().required() }))
+    .authorization((allow) => [allow.group('editors')])
+    .handler(a.handler.function(generateDeckStarter)),
+
+  // Regenerate one card's image or audio (admin edit action). Synchronous —
+  // a single Bedrock/Polly call, well under the resolver timeout. Editors only.
+  regenerateCardMedia: a
+    .mutation()
+    .arguments({ cardId: a.id().required(), kind: a.string().required() })
+    .returns(a.customType({ path: a.string().required() }))
+    .authorization((allow) => [allow.group('editors')])
+    .handler(a.handler.function(regenerateMedia)),
 });
 
 export type Schema = ClientSchema<typeof schema>;

@@ -19,10 +19,11 @@
     "test:e2e": "bddgen && playwright test",
     "crap": "node scripts/crap-check.mjs",
     "check:lines": "node scripts/check-file-lines.mjs",
+    "check:features": "node scripts/check-feature-coverage.mjs",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "quality": "npm run lint && npm run format:check && npm run check:lines && npm run test:coverage && npm run crap && npm run build",
+    "quality": "npm run lint && npm run format:check && npm run check:lines && npm run check:features && npm run test:coverage && npm run crap && npm run build",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -37,6 +38,7 @@
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.1073.0",
     "@aws-sdk/client-dynamodb": "^3.1073.0",
+    "@aws-sdk/client-lambda": "^3.1073.0",
     "@aws-sdk/client-polly": "^3.1073.0",
     "@aws-sdk/client-s3": "^3.1073.0",
     "@aws-sdk/lib-dynamodb": "^3.1073.0",

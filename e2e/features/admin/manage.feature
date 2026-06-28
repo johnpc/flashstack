@@ -16,3 +16,12 @@ Feature: Admin deck management (editor)
     Then the deck editor lists 1 card
     When the editor publishes the deck "E2E Roman Numerals"
     Then the deck "E2E Roman Numerals" shows status "PUBLISHED"
+
+  # The AI generate-deck control is editor-gated and wired. We assert it renders
+  # (the editor's entry to the Bedrock/Polly pipeline) without triggering a real
+  # generation in CI — that hits paid Bedrock/Polly and takes ~10s+; the live
+  # pipeline is verified out-of-band against the sandbox.
+  Scenario: The AI generate-deck form is available to editors
+    Given the editor signs in
+    When the editor opens deck management
+    Then the AI generate-deck form is available

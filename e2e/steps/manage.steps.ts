@@ -76,3 +76,8 @@ Then('the deck {string} shows status {string}', async ({ page }, topic: string, 
     timeout: 15_000,
   });
 });
+
+Then('the AI generate-deck form is available', async ({ page }) => {
+  await expect(page.getByTestId('generate-form')).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole('button', { name: 'Generate with AI' })).toBeVisible();
+});

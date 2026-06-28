@@ -28,3 +28,4 @@ export type DeckRecord = Schema['Deck']['type'];
 export type CardRecord = Schema['Card']['type'];
 export type UserDeckRecord = Schema['UserDeck']['type'];
 export type UserCardReviewRecord = Schema['UserCardReview']['type'];
+export type GenerationRunRecord = Schema['GenerationRun']['type'];

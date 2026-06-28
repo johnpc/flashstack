@@ -12,6 +12,7 @@ const cardApi = vi.hoisted(() => ({
 }));
 vi.mock('../deck/deckDetailApi', () => detail);
 vi.mock('./adminCardApi', () => cardApi);
+vi.mock('./generateApi', () => ({ regenerateCardMedia: vi.fn().mockResolvedValue('path') }));
 
 import { useAdminCards } from './useAdminCards';
 

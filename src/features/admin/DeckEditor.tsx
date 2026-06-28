@@ -16,7 +16,7 @@ import './admin.css';
 /** Admin: edit one deck's cards — add, edit, delete, reorder. */
 export function DeckEditor() {
   const { id } = useParams<{ id: string }>();
-  const { deck, cards, isLoading, add, edit, remove, move } = useAdminCards(id);
+  const { deck, cards, isLoading, add, edit, remove, move, regenerate } = useAdminCards(id);
 
   return (
     <IonPage>
@@ -42,6 +42,7 @@ export function DeckEditor() {
                   onSave={(input) => edit({ id: card.id, input })}
                   onDelete={() => remove(card.id)}
                   onMove={(direction) => move({ id: card.id, direction })}
+                  onRegenerate={(kind) => regenerate({ id: card.id, kind })}
                 />
               ))}
             </ul>

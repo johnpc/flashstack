@@ -15,7 +15,14 @@ const base = () => ({
 });
 const hook = vi.hoisted(() => ({ value: {} as State }));
 vi.mock('./useAdminDecks', () => ({ useAdminDecks: () => hook.value }));
+vi.mock('./useGenerateDeck', () => ({
+  useGenerateDeck: () => ({ runs: [], isLoading: false, generate: vi.fn(), isGenerating: false }),
+}));
 vi.mock('./NewDeckForm', () => ({ NewDeckForm: () => <div data-testid="new-deck-form" /> }));
+vi.mock('./GenerateDeckForm', () => ({
+  GenerateDeckForm: () => <div data-testid="generate-form" />,
+}));
+vi.mock('./GenerationRuns', () => ({ GenerationRuns: () => null }));
 
 import { ManageDecks } from './ManageDecks';
 
