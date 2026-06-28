@@ -22,10 +22,9 @@ describe('seedReferenceData', () => {
     const count = await seedReferenceData();
     expect(count).toBe(5);
     expect(m.create).toHaveBeenCalledTimes(5);
-    expect(m.create).toHaveBeenCalledWith(
-      expect.objectContaining({ slug: 'languages' }),
-      { authMode: 'userPool' },
-    );
+    expect(m.create).toHaveBeenCalledWith(expect.objectContaining({ slug: 'languages' }), {
+      authMode: 'userPool',
+    });
   });
 
   it('throws when a create returns errors', async () => {

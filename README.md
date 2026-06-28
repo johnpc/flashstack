@@ -22,13 +22,13 @@ Amplify Gen2 backend is initialized. Slices land per the [roadmap](#roadmap).
 
 ## Tech Stack
 
-| Layer                   | Choice                                                                           |
-| ----------------------- | -------------------------------------------------------------------------------- |
-| **Mobile / Web client** | [Ionic](https://ionicframework.com/) 8 + React 19 + TypeScript (strict)          |
-| **Native shell**        | [Capacitor](https://capacitorjs.com/) (iOS / Android)                            |
-| **Bundler**             | Vite                                                                             |
-| **Backend**             | AWS Amplify Gen2 — Cognito auth + AppSync (GraphQL) + DynamoDB                    |
-| **Testing**             | Vitest + Istanbul coverage (unit) · Playwright + playwright-bdd Gherkin (e2e)     |
+| Layer                   | Choice                                                                              |
+| ----------------------- | ----------------------------------------------------------------------------------- |
+| **Mobile / Web client** | [Ionic](https://ionicframework.com/) 8 + React 19 + TypeScript (strict)             |
+| **Native shell**        | [Capacitor](https://capacitorjs.com/) (iOS / Android)                               |
+| **Bundler**             | Vite                                                                                |
+| **Backend**             | AWS Amplify Gen2 — Cognito auth + AppSync (GraphQL) + DynamoDB                      |
+| **Testing**             | Vitest + Istanbul coverage (unit) · Playwright + playwright-bdd Gherkin (e2e)       |
 | **AI**                  | Bedrock Claude (card text) · Bedrock Stability (card images) · Amazon Polly (audio) |
 
 ---
@@ -126,14 +126,14 @@ Required repository secrets: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `TEST
 
 ## Roadmap
 
-| #   | Milestone                                                                       |
-| --- | ------------------------------------------------------------------------------- |
-| 1   | Scaffold + public repo + CI gates + Discover shelves (read path)                |
-| 2   | Discover decks — category shelves list published decks                          |
+| #   | Milestone                                                                        |
+| --- | -------------------------------------------------------------------------------- |
+| 1   | Scaffold + public repo + CI gates + Discover shelves (read path)                 |
+| 2   | Discover decks — category shelves list published decks                           |
 | 3   | My Decks — add/remove a deck (owner-scoped)                                      |
-| 4   | Study — play a deck, self-grade, SM-2 spaced repetition                         |
+| 4   | Study — play a deck, self-grade, SM-2 spaced repetition                          |
 | 5   | Admin deck generation — Bedrock + Polly Step Functions pipeline + manage/publish |
-| 6   | iOS + Android auto-publish verification                                         |
+| 6   | iOS + Android auto-publish verification                                          |
 
 ---
 

@@ -30,7 +30,9 @@ describe('clearOneModel', () => {
   });
 
   it('skips null rows and rows without an id', async () => {
-    const list = vi.fn().mockResolvedValueOnce({ data: [null, { id: '' }, { id: 'x' }], nextToken: null });
+    const list = vi
+      .fn()
+      .mockResolvedValueOnce({ data: [null, { id: '' }, { id: 'x' }], nextToken: null });
     const del = vi.fn().mockResolvedValue({});
     const removed = await clearOneModel({ list, delete: del });
     expect(removed).toBe(1);

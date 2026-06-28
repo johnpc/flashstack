@@ -45,7 +45,11 @@ export async function clearOneModel(model: ClearableModel): Promise<number> {
   let removed = 0;
   let token: string | undefined;
   do {
-    const { data, nextToken } = await model.list({ limit: 1000, nextToken: token, ...EDITOR_WRITE });
+    const { data, nextToken } = await model.list({
+      limit: 1000,
+      nextToken: token,
+      ...EDITOR_WRITE,
+    });
     const rows = data.filter((row): row is { id: string } => !!row?.id);
     await Promise.all(rows.map((row) => model.delete({ id: row.id }, EDITOR_WRITE)));
     removed += rows.length;
