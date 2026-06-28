@@ -1,0 +1,69 @@
+/**
+ * Flashstack design tokens. Consume these `--fs-*` variables and role classes
+ * everywhere — never hardcoded hex/px in feature CSS. Supports system light/dark
+ * (Ionic dark.system palette). A single blue accent; warm neutrals.
+ */
+
+:root {
+  --fs-font-sans: 'Inter', system-ui, sans-serif;
+  --fs-font-serif: 'Newsreader', Georgia, serif;
+
+  --fs-accent: #5b8def;
+  --fs-accent-contrast: #ffffff;
+  --fs-correct: #2e9e6b;
+  --fs-incorrect: #d9534f;
+
+  --fs-bg: #f7f8fa;
+  --fs-surface: #ffffff;
+  --fs-border: #e3e6ec;
+  --fs-text: #1b1d22;
+  --fs-text-muted: #5d636e;
+
+  --fs-radius: 14px;
+  --fs-gap: 16px;
+
+  /* Ionic theming hooks */
+  --ion-background-color: var(--fs-bg);
+  --ion-text-color: var(--fs-text);
+  --ion-font-family: var(--fs-font-sans);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fs-bg: #15171c;
+    --fs-surface: #1e2128;
+    --fs-border: #2c3038;
+    --fs-text: #f2f4f8;
+    --fs-text-muted: #9aa2b1;
+  }
+}
+
+body {
+  font-family: var(--fs-font-sans);
+}
+
+/* Role classes */
+.fs-heading {
+  font-family: var(--fs-font-sans);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--fs-text);
+}
+
+.fs-kicker {
+  font-family: var(--fs-font-sans);
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fs-accent);
+}
+
+.fs-muted {
+  color: var(--fs-text-muted);
+}
+
+.fs-card-face {
+  font-family: var(--fs-font-serif);
+  font-weight: 600;
+}
