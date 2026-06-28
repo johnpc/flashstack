@@ -297,8 +297,12 @@ jobs:
           groups = [g for g in api(f"/betaGroups?filter[app]={app_id}&limit=200").get("data", [])
                     if not g["attributes"].get("isInternalGroup", False)]
           if not groups:
-              raise SystemExit("No external beta group exists. Create one in App Store Connect "
-                               "(TestFlight → External Testing) and re-run.")
+              # External beta is OPTIONAL — the build is already uploaded and
+              # available to internal testers. Skip cleanly (success) when no
+              # external group exists rather than failing the deploy.
+              print("No external beta group — skipping external distribution. "
+                    "Build is uploaded and available to internal testers.")
+              raise SystemExit(0)
 
           # 4) Attach the build to each external group. ASC auto-submits for Beta App
           #    Review on first external assignment.
