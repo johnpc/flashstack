@@ -32,3 +32,31 @@ export async function seedReferenceData(): Promise<number> {
   console.log(`Seeded ${created} categories.`);
   return created;
 }
+
+/**
+ * Idempotent, NON-DESTRUCTIVE category ensure — creates only the slugs that are
+ * missing, never clears. Safe to run against prod (which holds real decks).
+ * Returns the count created. This is the fix-forward for "prod had no
+ * categories": run `npm run seed:categories` after a fresh backend deploy.
+ */
+export async function ensureCategories(): Promise<number> {
+  const { data: existing } = await client.models.Category.list({ limit: 500, ...EDITOR_WRITE });
+  const have = new Set((existing ?? []).map((c) => c?.slug));
+  let created = 0;
+  for (const category of seedCategories) {
+    if (have.has(category.slug)) continue;
+    const { errors } = await client.models.Category.create(
+      {
+        name: category.name,
+        slug: category.slug,
+        label: category.label,
+        sortOrder: category.sortOrder,
+      },
+      EDITOR_WRITE,
+    );
+    if (errors) throw new Error(`Category ${category.name}: ${JSON.stringify(errors)}`);
+    created += 1;
+  }
+  console.log(`Ensured categories — created ${created}, already had ${have.size}.`);
+  return created;
+}

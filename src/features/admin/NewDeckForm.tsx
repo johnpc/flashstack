@@ -1,11 +1,13 @@
 import type { NewDeck } from './adminDeckApi';
 import { useNewDeckForm } from './useNewDeckForm';
-
-const CATEGORIES = ['languages', 'mythology', 'scripture', 'science', 'history'];
+import { useShelves } from '../discover/useShelves';
+import { CategorySelect } from './CategorySelect';
 
 /** Inline form to create a new DRAFT deck. Renders only; logic in the hook. */
 export function NewDeckForm({ onCreate }: { onCreate: (d: NewDeck) => Promise<string> }) {
-  const f = useNewDeckForm(onCreate);
+  const { data: shelves } = useShelves();
+  const slugs = (shelves ?? []).map((s) => s.slug);
+  const f = useNewDeckForm(onCreate, slugs);
   return (
     <div className="new-deck" data-testid="new-deck-form">
       <input
@@ -15,18 +17,7 @@ export function NewDeckForm({ onCreate }: { onCreate: (d: NewDeck) => Promise<st
         value={f.topic}
         onChange={(e) => f.setTopic(e.target.value)}
       />
-      <select
-        className="new-deck__select"
-        aria-label="Category"
-        value={f.categorySlug}
-        onChange={(e) => f.setCategorySlug(e.target.value)}
-      >
-        {CATEGORIES.map((c) => (
-          <option key={c} value={c}>
-            {c}
-          </option>
-        ))}
-      </select>
+      <CategorySelect label="Category" value={f.categorySlug} onChange={f.setCategorySlug} />
       <button type="button" className="new-deck__btn" disabled={!f.canSubmit} onClick={f.submit}>
         {f.busy ? 'Creating…' : 'Create'}
       </button>

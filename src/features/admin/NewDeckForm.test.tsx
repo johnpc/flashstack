@@ -1,5 +1,16 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
+
+// The form reads real categories via useShelves — stub it with two shelves.
+vi.mock('../discover/useShelves', () => ({
+  useShelves: () => ({
+    data: [
+      { slug: 'languages', title: 'Languages', sortOrder: 1 },
+      { slug: 'mythology', title: 'Myths & Legends', sortOrder: 2 },
+    ],
+  }),
+}));
+
 import { NewDeckForm } from './NewDeckForm';
 
 describe('NewDeckForm', () => {

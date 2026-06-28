@@ -1,7 +1,8 @@
 import type { GenerateDeckInput } from './generateApi';
 import { useGenerateForm } from './useGenerateForm';
+import { useShelves } from '../discover/useShelves';
+import { CategorySelect } from './CategorySelect';
 
-const CATEGORIES = ['languages', 'mythology', 'scripture', 'science', 'history'];
 const LANGUAGES = ['en-US', 'es-ES', 'fr-FR', 'de-DE', 'it-IT', 'pt-BR', 'ja-JP'];
 
 /** AI generate-deck form: topic, category, language, card count. Renders only. */
@@ -10,7 +11,11 @@ export function GenerateDeckForm({
 }: {
   onGenerate: (i: GenerateDeckInput) => Promise<unknown>;
 }) {
-  const f = useGenerateForm(onGenerate);
+  const { data: shelves } = useShelves();
+  const f = useGenerateForm(
+    onGenerate,
+    (shelves ?? []).map((s) => s.slug),
+  );
   return (
     <div className="generate-form" data-testid="generate-form">
       <input
@@ -20,15 +25,7 @@ export function GenerateDeckForm({
         value={f.topic}
         onChange={(e) => f.setTopic(e.target.value)}
       />
-      <select
-        aria-label="AI category"
-        value={f.categorySlug}
-        onChange={(e) => f.setCategorySlug(e.target.value)}
-      >
-        {CATEGORIES.map((c) => (
-          <option key={c}>{c}</option>
-        ))}
-      </select>
+      <CategorySelect label="AI category" value={f.categorySlug} onChange={f.setCategorySlug} />
       <select
         aria-label="Voice language"
         value={f.voiceLanguage}

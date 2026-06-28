@@ -1,5 +1,10 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
+
+vi.mock('../discover/useShelves', () => ({
+  useShelves: () => ({ data: [{ slug: 'languages', title: 'Languages', sortOrder: 1 }] }),
+}));
+
 import { GenerateDeckForm } from './GenerateDeckForm';
 
 describe('GenerateDeckForm', () => {
