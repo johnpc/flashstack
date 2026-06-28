@@ -12,26 +12,31 @@ const GRADES = [
 interface StudyCardProps {
   card: CardRecord;
   revealed: boolean;
+  /** 'front' = prompt with front, recall back; 'back' = prompt with back. */
+  direction: 'front' | 'back';
   onReveal: () => void;
   onGrade: (value: number) => void;
 }
 
-/** One flashcard: shows the front, reveals the back + media, then grade buttons. */
-export function StudyCard({ card, revealed, onReveal, onGrade }: StudyCardProps) {
-  const imageUrl = useMediaUrl(revealed ? card.imagePath : null);
+/** One flashcard: prompt face (per direction), reveal, then answer + grades.
+ * The image is shown on BOTH faces (it illustrates the card either way). */
+export function StudyCard({ card, revealed, direction, onReveal, onGrade }: StudyCardProps) {
+  const imageUrl = useMediaUrl(card.imagePath);
+  const prompt = direction === 'front' ? card.front : card.back;
+  const answer = direction === 'front' ? card.back : card.front;
   return (
     <div className="study-card" data-testid="study-card">
-      <p className="fs-card-face study-card__front">{card.front}</p>
+      {imageUrl && <img className="study-card__img" src={imageUrl} alt="" />}
+      <p className="fs-card-face study-card__front">{prompt}</p>
       {!revealed ? (
         <button type="button" className="study-card__reveal" onClick={onReveal}>
           Show answer
         </button>
       ) : (
         <div className="study-card__answer" data-testid="study-answer">
-          <p className="fs-card-face study-card__back">{card.back}</p>
+          <p className="fs-card-face study-card__back">{answer}</p>
           {card.hint && <p className="fs-muted study-card__hint">{card.hint}</p>}
           {card.example && <p className="study-card__example">{card.example}</p>}
-          {imageUrl && <img className="study-card__img" src={imageUrl} alt="" />}
           <div className="study-card__grades">
             {GRADES.map((g) => (
               <button

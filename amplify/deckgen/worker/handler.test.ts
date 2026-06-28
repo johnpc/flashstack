@@ -5,12 +5,14 @@ const e = vi.hoisted(() => ({
   parseCards: vi.fn(),
   updateItem: vi.fn(),
   produceCard: vi.fn(),
+  produceCover: vi.fn(),
 }));
 vi.mock('../shared/bedrock', () => ({ invokeText: e.invokeText }));
 vi.mock('../shared/cardsPrompt', () => ({ buildCardsRequest: () => 'body' }));
 vi.mock('../shared/parseCards', () => ({ parseCards: e.parseCards }));
 vi.mock('../shared/ddb', () => ({ updateItem: e.updateItem }));
 vi.mock('./produceCard', () => ({ produceCard: e.produceCard }));
+vi.mock('./produceCover', () => ({ produceCover: e.produceCover }));
 
 import { handler } from './handler';
 
@@ -29,16 +31,18 @@ describe('deckgen worker handler', () => {
       { front: 'Gracias', back: 'Thanks' },
     ]);
     e.produceCard.mockResolvedValue('cid');
+    e.produceCover.mockResolvedValue('media/decks/d1/cover.webp');
     e.updateItem.mockResolvedValue(undefined);
   });
 
-  it('produces every card then marks the deck + run DRAFT_READY', async () => {
+  it('produces a cover + every card then marks the deck + run DRAFT_READY', async () => {
     await handler(event);
+    expect(e.produceCover).toHaveBeenCalledWith('bucket', 'd1', 'Spanish');
     expect(e.produceCard).toHaveBeenCalledTimes(2);
     expect(e.updateItem).toHaveBeenCalledWith(
       'decks',
       'd1',
-      expect.objectContaining({ cardCount: 2 }),
+      expect.objectContaining({ cardCount: 2, coverImagePath: 'media/decks/d1/cover.webp' }),
     );
     expect(e.updateItem).toHaveBeenCalledWith(
       'runs',

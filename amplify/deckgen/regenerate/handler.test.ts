@@ -11,6 +11,10 @@ vi.mock('../shared/bedrock', () => ({ generateImage: e.generateImage }));
 vi.mock('../shared/polly', () => ({ synthesizeSpeech: e.synthesizeSpeech }));
 vi.mock('../shared/s3', () => ({ putMedia: e.putMedia }));
 vi.mock('../shared/ddb', () => ({ getItem: e.getItem, updateItem: e.updateItem }));
+vi.mock('../shared/resizeImage', () => ({
+  resizeWebp: (b: Uint8Array) => Promise.resolve(b),
+  CARD_IMAGE_SIZE: 512,
+}));
 
 import { handler } from './handler';
 
@@ -40,7 +44,7 @@ describe('regenerateCardMedia handler', () => {
 
   it('regenerates the image and updates imagePath', async () => {
     const out = await call('image');
-    expect(out).toEqual({ path: 'media/decks/d1/c1.png' });
+    expect(out).toEqual({ path: 'media/decks/d1/c1.webp' });
     expect(e.updateItem).toHaveBeenCalledWith(
       'cards',
       'c1',

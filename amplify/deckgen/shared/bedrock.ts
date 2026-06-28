@@ -25,7 +25,12 @@ export async function invokeText(body: string): Promise<unknown> {
   return JSON.parse(new TextDecoder().decode(res.body));
 }
 
-/** Generate a square PNG illustration from a prompt; return raw image bytes. */
+/**
+ * Generate a square illustration from a prompt; return raw PNG bytes.
+ * stable-image-core only supports png/jpeg output (NOT webp), and can't pick
+ * pixel dimensions — so it emits a ~1024px PNG and the caller runs it through
+ * sharp (resizeWebp) to shrink + convert to a small WebP before storing.
+ */
 export async function generateImage(prompt: string): Promise<Uint8Array> {
   const res = await client.send(
     new InvokeModelCommand({

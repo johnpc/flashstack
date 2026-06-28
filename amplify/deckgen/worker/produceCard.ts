@@ -7,6 +7,7 @@
 import { generateImage } from '../shared/bedrock';
 import { synthesizeSpeech } from '../shared/polly';
 import { putMedia } from '../shared/s3';
+import { resizeWebp, CARD_IMAGE_SIZE } from '../shared/resizeImage';
 import { cardImageKey, cardAudioKey, imagePrompt } from '../shared/mediaKeys';
 import { buildCardItem } from '../shared/cardItem';
 import { putItem } from '../shared/ddb';
@@ -28,8 +29,9 @@ async function makeImage(
   front: string,
 ): Promise<string | undefined> {
   try {
-    const bytes = await generateImage(imagePrompt(front, ctx.topic));
-    return putMedia(ctx.bucket, cardImageKey(ctx.deckId, cardId), bytes, 'image/png');
+    const raw = await generateImage(imagePrompt(front, ctx.topic));
+    const bytes = await resizeWebp(raw, CARD_IMAGE_SIZE);
+    return putMedia(ctx.bucket, cardImageKey(ctx.deckId, cardId), bytes, 'image/webp');
   } catch {
     return undefined; // non-fatal: card renders without an image
   }

@@ -12,6 +12,7 @@
     "e2e-config": "ampx generate outputs --stack amplify-flashstack-xss-sandbox-36f6fbd736 --profile personal",
     "seed": "tsx amplify/seed/seed.ts",
     "seed:categories": "tsx amplify/seed/seedCategories.ts",
+    "layer:sharp": "bash scripts/build-sharp-layer.sh",
     "test": "vitest run",
     "test.unit": "vitest run",
     "test:watch": "vitest",
@@ -60,7 +61,8 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-router": "^5.3.4",
-    "react-router-dom": "^5.3.4"
+    "react-router-dom": "^5.3.4",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "@aws-amplify/backend": "^1.23.0",

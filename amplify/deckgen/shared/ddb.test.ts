@@ -36,6 +36,18 @@ describe('ddb edges', () => {
     });
   });
 
+  it('skips undefined fields (DynamoDB rejects undefined values)', async () => {
+    await updateItem('t', 'x', { cardCount: 3, coverImagePath: undefined });
+    const cmd = send.mock.calls[0][0].input;
+    expect(cmd.UpdateExpression).toBe('SET #cardCount = :cardCount');
+    expect(cmd.ExpressionAttributeValues).toEqual({ ':cardCount': 3 });
+  });
+
+  it('no-ops when every field is undefined', async () => {
+    await updateItem('t', 'x', { coverImagePath: undefined });
+    expect(send).not.toHaveBeenCalled();
+  });
+
   it('getItem returns the item or null', async () => {
     send.mockResolvedValueOnce({ Item: { id: 'x' } });
     expect(await getItem('t', 'x')).toEqual({ id: 'x' });

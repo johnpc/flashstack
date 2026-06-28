@@ -11,6 +11,8 @@ export function useStudy(deckId: string | undefined) {
   const queryClient = useQueryClient();
   const [index, setIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
+  // Which face is the prompt: 'front' (recall the back) or 'back' (recall front).
+  const [direction, setDirection] = useState<'front' | 'back'>('front');
 
   const { data, isLoading } = useQuery({
     queryKey: ['study', deckId],
@@ -43,6 +45,13 @@ export function useStudy(deckId: string | undefined) {
     await queryClient.invalidateQueries({ queryKey: ['study', deckId] });
   }, [queryClient, deckId]);
 
+  // Flipping direction restarts the session from the first card on the new face.
+  const toggleDirection = useCallback(() => {
+    setDirection((d) => (d === 'front' ? 'back' : 'front'));
+    setIndex(0);
+    setRevealed(false);
+  }, []);
+
   return {
     isAuthenticated: status === 'authenticated',
     isLoading: enabled && isLoading,
@@ -52,6 +61,8 @@ export function useStudy(deckId: string | undefined) {
     grade,
     done,
     reset,
+    direction,
+    toggleDirection,
     position: { index, total: queue.length },
   };
 }

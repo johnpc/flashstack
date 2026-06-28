@@ -240,3 +240,34 @@
   padding: 10px;
   color: var(--fs-text);
 }
+
+/* --- Card media (editor preview) --- */
+.card-media {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.card-media__img {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 auto;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--fs-border);
+}
+
+.card-media__img--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--fs-bg);
+  color: var(--fs-text-muted);
+  font-size: 1.4rem;
+}
+
+.card-media__audio {
+  flex: 1 1 auto;
+  height: 36px;
+  min-width: 0;
+}

@@ -38,12 +38,23 @@ export function Study() {
           <p className="fs-muted">Loading…</p>
         ) : s.current ? (
           <>
-            <p className="fs-muted study__progress" data-testid="study-progress">
-              {s.position.index + 1} / {s.position.total}
-            </p>
+            <div className="study__bar">
+              <span className="fs-muted study__progress" data-testid="study-progress">
+                {s.position.index + 1} / {s.position.total}
+              </span>
+              <button
+                type="button"
+                className="study__direction"
+                data-testid="study-direction"
+                onClick={s.toggleDirection}
+              >
+                {s.direction === 'front' ? 'Front → Back' : 'Back → Front'} ⇄
+              </button>
+            </div>
             <StudyCard
               card={s.current.card}
               revealed={s.revealed}
+              direction={s.direction}
               onReveal={s.reveal}
               onGrade={s.grade}
             />

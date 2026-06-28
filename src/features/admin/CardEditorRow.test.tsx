@@ -1,5 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
+
+// CardMedia resolves S3 urls (useMediaUrl) — stub it to keep this row test SDK-free.
+vi.mock('./CardMedia', () => ({ CardMedia: () => <div data-testid="card-media" /> }));
+
 import { CardEditorRow } from './CardEditorRow';
 import type { CardRecord } from '../../lib/dataClient';
 

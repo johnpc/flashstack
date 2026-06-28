@@ -7,6 +7,14 @@
  */
 import { defineFunction } from '@aws-amplify/backend';
 
+/**
+ * sharp is a native module — it can't be esbuild-bundled for Lambda. We ship the
+ * linux-x64 build as a layer and reference it here; the `sharp` key externalizes
+ * it from the bundle so the layer's binary is used at runtime. Republish via
+ * `npm run layer:sharp` if the version changes.
+ */
+export const SHARP_LAYER_ARN = 'arn:aws:lambda:us-west-2:566092841021:layer:flashstack-sharp:1';
+
 export const deckgenWorker = defineFunction({
   name: 'deckgen-worker',
   entry: './handler.ts',
@@ -15,4 +23,5 @@ export const deckgenWorker = defineFunction({
   // Co-locate with the starter (data stack) so the starter→worker invoke grant
   // and the worker's table writes don't span stacks (circular-dependency fix).
   resourceGroupName: 'data',
+  layers: { sharp: SHARP_LAYER_ARN },
 });

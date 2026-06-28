@@ -12,6 +12,7 @@ import { parseCards } from '../shared/parseCards';
 import { voiceForLanguage } from '../shared/voiceForLanguage';
 import { updateItem } from '../shared/ddb';
 import { produceCard, type ProduceCardCtx } from './produceCard';
+import { produceCover } from './produceCover';
 import { mapLimit } from './mapLimit';
 import type { WorkerEvent } from '../start/invokeWorker';
 
@@ -45,9 +46,17 @@ export async function handler(event: WorkerEvent): Promise<void> {
       now,
     };
 
-    await mapLimit(cards, MEDIA_CONCURRENCY, (card, i) => produceCard(ctx, randomUUID(), i, card));
+    // Cover (one per deck) runs alongside the per-card media fan-out.
+    const [coverPath] = await Promise.all([
+      produceCover(ctx.bucket, event.deckId, event.topic),
+      mapLimit(cards, MEDIA_CONCURRENCY, (card, i) => produceCard(ctx, randomUUID(), i, card)),
+    ]);
 
-    await updateItem(deckTable, event.deckId, { cardCount: cards.length, updatedAt: now });
+    await updateItem(deckTable, event.deckId, {
+      cardCount: cards.length,
+      coverImagePath: coverPath,
+      updatedAt: now,
+    });
     await updateItem(runTable, event.runId, {
       status: 'DRAFT_READY',
       generatedCount: cards.length,

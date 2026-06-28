@@ -1,13 +1,30 @@
-.study__progress {
-  text-align: center;
-  font-size: 0.85rem;
+.study__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin: 0 0 16px;
+}
+
+.study__progress {
+  font-size: 0.85rem;
+}
+
+.study__direction {
+  background: var(--fs-accent-soft);
+  color: var(--fs-accent-strong);
+  border: none;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
 .study-card {
   background: var(--fs-surface);
   border: 1px solid var(--fs-border);
   border-radius: var(--fs-radius);
+  box-shadow: var(--fs-shadow);
   padding: 28px 20px;
   text-align: center;
 }
@@ -39,10 +56,15 @@
   margin: 4px 0;
 }
 
+/* Constrain card art to a reasonable display size (the source is small WebP). */
 .study-card__img {
-  max-width: 100%;
-  border-radius: 10px;
-  margin: 12px 0;
+  display: block;
+  width: 160px;
+  height: 160px;
+  max-width: 60%;
+  object-fit: cover;
+  border-radius: 12px;
+  margin: 0 auto 16px;
 }
 
 .study-card__grades {

@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
 // App mounts the Discover route which fetches shelves; stub the data hook so
@@ -20,9 +20,14 @@ vi.mock('./features/auth/authClient', () => ({
 
 import App from './App';
 
+import { currentEmail } from './features/auth/authClient';
+
 describe('App', () => {
-  it('renders without crashing', () => {
+  it('renders without crashing', async () => {
     const { baseElement } = render(<App />);
     expect(baseElement).toBeDefined();
+    // AuthProvider probes the session on mount (async); await it so the state
+    // update lands during the test, not after teardown (avoids unhandled errors).
+    await waitFor(() => expect(currentEmail).toHaveBeenCalled());
   });
 });

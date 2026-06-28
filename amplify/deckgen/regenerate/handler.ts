@@ -7,6 +7,7 @@
 import { generateImage } from '../shared/bedrock';
 import { synthesizeSpeech } from '../shared/polly';
 import { putMedia } from '../shared/s3';
+import { resizeWebp, CARD_IMAGE_SIZE } from '../shared/resizeImage';
 import { cardImageKey, cardAudioKey, imagePrompt } from '../shared/mediaKeys';
 import { voiceForLanguage } from '../shared/voiceForLanguage';
 import { getItem, updateItem } from '../shared/ddb';
@@ -31,8 +32,9 @@ export const handler: Schema['regenerateCardMedia']['functionHandler'] = async (
   let path: string;
   if (kind === 'image') {
     const deck = await getItem(env('DECK_TABLE'), deckId);
-    const bytes = await generateImage(imagePrompt(front, String(deck?.topic ?? '')));
-    path = await putMedia(env('MEDIA_BUCKET'), cardImageKey(deckId, cardId), bytes, 'image/png');
+    const raw = await generateImage(imagePrompt(front, String(deck?.topic ?? '')));
+    const bytes = await resizeWebp(raw, CARD_IMAGE_SIZE);
+    path = await putMedia(env('MEDIA_BUCKET'), cardImageKey(deckId, cardId), bytes, 'image/webp');
     await updateItem(cardTable, cardId, { imagePath: path, updatedAt: new Date().toISOString() });
   } else if (kind === 'audio') {
     const deck = await getItem(env('DECK_TABLE'), deckId);

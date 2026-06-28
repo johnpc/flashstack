@@ -12,6 +12,8 @@ const base = () => ({
   grade: vi.fn(),
   done: false,
   reset: vi.fn(),
+  direction: 'front' as 'front' | 'back',
+  toggleDirection: vi.fn(),
   position: { index: 0, total: 0 },
 });
 const hook = vi.hoisted(() => ({ value: {} as StudyState }));

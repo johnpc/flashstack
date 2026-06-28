@@ -10,6 +10,10 @@ vi.mock('../shared/bedrock', () => ({ generateImage: e.generateImage }));
 vi.mock('../shared/polly', () => ({ synthesizeSpeech: e.synthesizeSpeech }));
 vi.mock('../shared/s3', () => ({ putMedia: e.putMedia }));
 vi.mock('../shared/ddb', () => ({ putItem: e.putItem }));
+vi.mock('../shared/resizeImage', () => ({
+  resizeWebp: (b: Uint8Array) => Promise.resolve(b),
+  CARD_IMAGE_SIZE: 512,
+}));
 
 import { produceCard, type ProduceCardCtx } from './produceCard';
 
@@ -38,7 +42,7 @@ describe('produceCard', () => {
     const item = e.putItem.mock.calls[0][1];
     expect(item).toMatchObject({
       id: 'c1',
-      imagePath: 'media/decks/d1/c1.png',
+      imagePath: 'media/decks/d1/c1.webp',
       audioPath: 'media/decks/d1/c1.mp3',
     });
   });
@@ -56,6 +60,6 @@ describe('produceCard', () => {
     await produceCard(ctx, 'c1', 0, card);
     const item = e.putItem.mock.calls[0][1];
     expect(item.audioPath).toBeUndefined();
-    expect(item.imagePath).toBe('media/decks/d1/c1.png');
+    expect(item.imagePath).toBe('media/decks/d1/c1.webp');
   });
 });

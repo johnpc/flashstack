@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { CardRecord } from '../../lib/dataClient';
 import type { CardInput } from './adminCardApi';
+import { CardMedia } from './CardMedia';
 
 interface Props {
   card: CardRecord;
@@ -18,6 +19,7 @@ export function CardEditorRow({ card, onSave, onDelete, onMove, onRegenerate }: 
 
   return (
     <li className="card-edit" data-testid="card-edit">
+      <CardMedia imagePath={card.imagePath} audioPath={card.audioPath} />
       <div className="card-edit__fields">
         <input
           aria-label="Front"

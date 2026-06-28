@@ -25,13 +25,17 @@ export async function getItem(table: string, id: string): Promise<Record<string,
   return res.Item ?? null;
 }
 
-/** Set named attributes on an item by id (SET expression built from `fields`). */
+/** Set named attributes on an item by id (SET expression built from `fields`).
+ * Undefined values are skipped — DynamoDB rejects an undefined attribute value,
+ * so an optional field (e.g. a cover that failed to generate) is simply omitted
+ * rather than failing the whole update. */
 export async function updateItem(
   table: string,
   id: string,
   fields: Record<string, unknown>,
 ): Promise<void> {
-  const keys = Object.keys(fields);
+  const keys = Object.keys(fields).filter((k) => fields[k] !== undefined);
+  if (keys.length === 0) return;
   const names = Object.fromEntries(keys.map((k) => [`#${k}`, k]));
   const values = Object.fromEntries(keys.map((k) => [`:${k}`, fields[k]]));
   await doc.send(
