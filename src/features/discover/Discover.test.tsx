@@ -7,6 +7,9 @@ function useShelvesMock() {
   return { data: [{ slug: 'lang', title: 'Languages', sortOrder: 1 }], isLoading: false };
 }
 vi.mock('./useShelves', () => ({ useShelves: () => hook.value }));
+// Discover renders the editor-only EditorLink, which probes Cognito groups —
+// stub it so the shelf test stays focused and SDK-free.
+vi.mock('../admin/EditorLink', () => ({ EditorLink: () => null }));
 
 import { Discover } from './Discover';
 import { useShelves } from './useShelves';

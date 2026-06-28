@@ -7,6 +7,9 @@ import { Study } from './features/study/Study';
 import { MyDecks } from './features/mydecks/MyDecks';
 import { SignIn } from './features/auth/SignIn';
 import { SignUp } from './features/auth/SignUp';
+import { EditorGate } from './features/admin/EditorGate';
+import { ManageDecks } from './features/admin/ManageDecks';
+import { DeckEditor } from './features/admin/DeckEditor';
 
 /** App routes. Tabs + screens grow per slice; Discover is the launch surface. */
 export function AppRoutes() {
@@ -32,6 +35,16 @@ export function AppRoutes() {
       </Route>
       <Route exact path="/signup">
         <SignUp />
+      </Route>
+      <Route exact path="/admin/decks">
+        <EditorGate>
+          <ManageDecks />
+        </EditorGate>
+      </Route>
+      <Route exact path="/admin/decks/:id">
+        <EditorGate>
+          <DeckEditor />
+        </EditorGate>
       </Route>
       <Route exact path="/">
         <Redirect to="/discover" />
