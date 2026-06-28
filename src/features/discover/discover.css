@@ -61,6 +61,81 @@
   opacity: 0.6;
 }
 
+/* --- Collapsible category sections --- */
+.discover__sections {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cat-section {
+  background: var(--fs-surface);
+  border: 1px solid var(--fs-border);
+  border-radius: var(--fs-radius);
+  box-shadow: var(--fs-shadow);
+  overflow: hidden;
+}
+
+.cat-section__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 18px 16px;
+  text-align: left;
+  color: var(--fs-text);
+}
+
+.cat-section__title {
+  flex: 1 1 auto;
+  font-family: var(--fs-font-sans);
+  font-weight: 600;
+  font-size: 1.02rem;
+}
+
+.cat-section__chevron {
+  flex: 0 0 auto;
+  font-size: 1.1rem;
+  color: var(--fs-text-muted);
+}
+
+.cat-section__body {
+  padding: 0 16px 16px;
+}
+
+.cat-section__hint {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Horizontal deck preview rail. */
+.cat-section__rail {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  margin: 0 -4px;
+  padding: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.cat-section__item {
+  flex: 0 0 46%;
+  max-width: 180px;
+  scroll-snap-align: start;
+}
+
+.cat-section__all {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--fs-accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
 .discover__shelf--skeleton {
   height: 60px;
   border: none;

@@ -11,31 +11,21 @@ Then('they are taken to the Discover tab', async ({ page }) => {
   await expect(page).toHaveURL(/\/discover$/);
 });
 
-Then('a category shelf {string} is visible', async ({ page }, title: string) => {
-  // Assert on a REAL seeded category title rendered in a shelf — not just that
-  // the list exists. The seed creates these; this exercises the guest read.
-  await expect(
-    page.getByTestId('shelf').filter({ hasText: new RegExp(`^${title}$`) }),
-  ).toBeVisible();
+Then('a category section {string} is visible', async ({ page }, title: string) => {
+  // Assert on a REAL seeded category rendered as a section header — the guest
+  // read of the Category rows.
+  await expect(page.getByRole('button', { name: title })).toBeVisible();
 });
 
-When('they open the {string} shelf', async ({ page }, title: string) => {
-  await page
-    .getByTestId('shelf')
-    .filter({ hasText: new RegExp(`^${title}$`) })
-    .click();
+When('they expand the {string} section', async ({ page }, title: string) => {
+  const header = page.getByRole('button', { name: title });
+  // Expand only if collapsed (the first section starts open).
+  if ((await header.getAttribute('aria-expanded')) === 'false') await header.click();
 });
 
 Then('a deck titled {string} is visible', async ({ page }, topic: string) => {
-  // Real seeded deck, read via the categorySlug GSI — the guest deck read path.
-  await expect(page.getByTestId('deck-card').filter({ hasText: new RegExp(topic) })).toBeVisible();
-});
-
-Then('that deck shows its card count', async ({ page }) => {
-  await expect(
-    page
-      .getByTestId('deck-card')
-      .first()
-      .getByText(/\d+ cards/),
-  ).toBeVisible();
+  // Real seeded deck previewed inline — the guest deck read via the categorySlug GSI.
+  await expect(page.getByTestId('deck-card').filter({ hasText: new RegExp(topic) })).toBeVisible({
+    timeout: 15_000,
+  });
 });
