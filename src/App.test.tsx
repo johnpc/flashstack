@@ -7,6 +7,17 @@ vi.mock('./features/discover/useShelves', () => ({
   useShelves: () => ({ data: [], isLoading: false }),
 }));
 
+// App wraps the tree in AuthProvider, which probes the Cognito session on mount
+// via authClient — stub that SDK-touching module.
+vi.mock('./features/auth/authClient', () => ({
+  currentEmail: vi.fn().mockResolvedValue(null),
+  currentGroups: vi.fn().mockResolvedValue([]),
+  signIn: vi.fn(),
+  signUp: vi.fn(),
+  confirmSignUp: vi.fn(),
+  signOut: vi.fn(),
+}));
+
 import App from './App';
 
 describe('App', () => {

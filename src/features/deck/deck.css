@@ -1,0 +1,45 @@
+.deck__title {
+  font-size: 1.5rem;
+  margin: 0 0 8px;
+}
+
+.save-deck-btn {
+  display: inline-block;
+  margin: 14px 0;
+  background: var(--fs-accent);
+  color: var(--fs-accent-contrast);
+  border: none;
+  border-radius: 999px;
+  padding: 12px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.save-deck-btn[aria-pressed='true'] {
+  background: var(--fs-surface);
+  color: var(--fs-accent);
+  border: 1px solid var(--fs-accent);
+}
+
+.save-deck-btn:disabled {
+  opacity: 0.6;
+}
+
+.deck__cards {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.deck__card-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--fs-surface);
+  border: 1px solid var(--fs-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}

@@ -115,6 +115,8 @@ jobs:
         area:
           - name: discover
             paths: .features-gen/e2e/features/discover
+          - name: my-decks
+            paths: .features-gen/e2e/features/mydecks
     steps:
       - uses: actions/checkout@v7
 

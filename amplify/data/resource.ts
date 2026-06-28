@@ -81,6 +81,24 @@ const schema = a.schema({
       allow.authenticated().to(['read']),
       allow.group('editors').to(['create', 'update', 'delete']),
     ]),
+
+  // A user's saved deck ("My Decks"). Per-user, so owner-based authz (userPool):
+  // every row is scoped to its creator's Cognito identity — a user only reads
+  // and writes their own. Card fields are denormalized so the list renders
+  // without a per-row Deck fetch (mirrors stoop's UserSavedPost). Read/write
+  // these with the userPool authMode or the owner rule returns empty (ADR 0004).
+  UserDeck: a
+    .model({
+      deckId: a.id().required(),
+      topic: a.string().required(),
+      categorySlug: a.string(),
+      cardCount: a.integer().default(0),
+      coverImagePath: a.string(),
+      addedAt: a.datetime(),
+    })
+    // Per-user lookup of a deck's saved state, scoped by owner at the row level.
+    .secondaryIndexes((index) => [index('deckId')])
+    .authorization((allow) => [allow.owner()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;

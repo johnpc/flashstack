@@ -6,7 +6,7 @@ import './tabBar.css';
 /** Bottom tab bar. Wired tabs navigate; the rest are placeholders for now. */
 const TABS: { label: string; icon: string; to?: string }[] = [
   { label: 'Discover', icon: compassOutline, to: '/discover' },
-  { label: 'My Decks', icon: libraryOutline },
+  { label: 'My Decks', icon: libraryOutline, to: '/my-decks' },
   { label: 'You', icon: personOutline },
 ];
 

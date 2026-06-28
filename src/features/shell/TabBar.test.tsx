@@ -20,7 +20,9 @@ describe('TabBar', () => {
   it('renders wired tabs as links and placeholders as buttons', () => {
     renderTabBar('Discover');
     expect(screen.getByRole('link', { name: 'Discover' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'My Decks' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'My Decks' })).toBeInTheDocument();
+    // "You" is not wired yet — still a placeholder button.
+    expect(screen.getByRole('button', { name: 'You' })).toBeInTheDocument();
   });
 
   it('defaults the active tab to Discover', () => {
