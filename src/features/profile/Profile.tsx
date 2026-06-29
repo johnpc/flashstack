@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
 import { useIsEditor } from '../admin/useIsEditor';
 import { StreakCard } from '../stats/StreakCard';
+import { ReminderToggle } from '../reminders/ReminderToggle';
 import { TabBar } from '../shell/TabBar';
 import { EmptyState } from '../shell/EmptyState';
 import './profile.css';
@@ -42,6 +43,7 @@ export function Profile() {
       </div>
 
       <StreakCard />
+      <ReminderToggle />
 
       {isEditor && (
         <Link to="/admin/decks" className="profile__row" data-testid="profile-manage">

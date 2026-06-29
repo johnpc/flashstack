@@ -8,6 +8,7 @@ const editor = vi.hoisted(() => ({ isEditor: false }));
 vi.mock('../auth/useAuth', () => ({ useAuth: () => auth.value }));
 vi.mock('../admin/useIsEditor', () => ({ useIsEditor: () => editor }));
 vi.mock('../stats/StreakCard', () => ({ StreakCard: () => <div data-testid="streak" /> }));
+vi.mock('../reminders/ReminderToggle', () => ({ ReminderToggle: () => null }));
 
 import { Profile } from './Profile';
 
