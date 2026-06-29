@@ -14,6 +14,8 @@ export function useStudy(deckId: string | undefined) {
   const queryClient = useQueryClient();
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
+  // Running session tally (correct out of answered) for the end-of-session score.
+  const [score, setScore] = useState({ correct: 0, total: 0 });
   // Which face is the prompt: 'front' (recall the back) or 'back' (recall front).
   const [direction, setDirection] = useState<'front' | 'back'>('front');
 
@@ -40,7 +42,9 @@ export function useStudy(deckId: string | undefined) {
   const answer = useCallback(
     async (choice: string) => {
       if (!current || !deckId || !choices || picked) return;
+      const correct = choice === choices.answer;
       setPicked(choice);
+      setScore((s) => ({ correct: s.correct + (correct ? 1 : 0), total: s.total + 1 }));
       await gradeCard(
         deckId,
         current.card.id,
@@ -59,6 +63,7 @@ export function useStudy(deckId: string | undefined) {
   const reset = useCallback(async () => {
     setIndex(0);
     setPicked(null);
+    setScore({ correct: 0, total: 0 });
     await queryClient.invalidateQueries({ queryKey: ['study', deckId] });
   }, [queryClient, deckId]);
 
@@ -66,6 +71,7 @@ export function useStudy(deckId: string | undefined) {
     setDirection((d) => (d === 'front' ? 'back' : 'front'));
     setIndex(0);
     setPicked(null);
+    setScore({ correct: 0, total: 0 });
   }, []);
 
   return {
@@ -78,6 +84,7 @@ export function useStudy(deckId: string | undefined) {
     next,
     done,
     reset,
+    score,
     direction,
     toggleDirection,
     position: { index, total: queue.length },

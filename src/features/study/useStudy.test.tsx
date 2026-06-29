@@ -76,6 +76,27 @@ describe('useStudy', () => {
     expect(api.gradeCard).toHaveBeenCalledTimes(1);
   });
 
+  it('tallies the session score (correct out of answered)', async () => {
+    api.fetchStudyData.mockResolvedValue(twoNewCards);
+    const { result } = renderHook(() => useStudy('d1'), { wrapper });
+    await waitFor(() => expect(result.current.current?.card.id).toBe('c1'));
+    await act(async () => result.current.answer('A')); // c1 correct
+    act(() => result.current.next());
+    await waitFor(() => expect(result.current.current?.card.id).toBe('c2'));
+    await act(async () => result.current.answer('A')); // c2 answer is 'B' -> wrong
+    expect(result.current.score).toEqual({ correct: 1, total: 2 });
+  });
+
+  it('resets the score on reset and on toggleDirection', async () => {
+    api.fetchStudyData.mockResolvedValue(twoNewCards);
+    const { result } = renderHook(() => useStudy('d1'), { wrapper });
+    await waitFor(() => expect(result.current.current?.card.id).toBe('c1'));
+    await act(async () => result.current.answer('A'));
+    expect(result.current.score.total).toBe(1);
+    act(() => result.current.toggleDirection());
+    expect(result.current.score).toEqual({ correct: 0, total: 0 });
+  });
+
   it('toggleDirection flips the prompt face and restarts from the first card', async () => {
     api.fetchStudyData.mockResolvedValue(twoNewCards);
     const { result } = renderHook(() => useStudy('d1'), { wrapper });

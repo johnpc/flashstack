@@ -18,3 +18,9 @@ Feature: Study a deck (authenticated, multiple choice)
     Then answer feedback is shown
     When the user advances to the next card
     Then the study session advances past the first card
+
+  Scenario: Finishing a session shows a score summary
+    Given the study test user signs in
+    When the user starts studying the "Top Spanish Phrases" deck
+    And the user answers every card in the session
+    Then a session score summary is shown

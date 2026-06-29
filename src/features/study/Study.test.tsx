@@ -13,6 +13,7 @@ const base = () => ({
   next: vi.fn(),
   done: false,
   reset: vi.fn(),
+  score: { correct: 0, total: 0 },
   direction: 'front' as 'front' | 'back',
   toggleDirection: vi.fn(),
   position: { index: 0, total: 0 },
@@ -60,5 +61,13 @@ describe('Study', () => {
     hook.value = { ...base(), current: null, position: { index: 0, total: 0 } };
     renderAt();
     expect(screen.getByTestId('study-done')).toBeInTheDocument();
+    expect(screen.queryByTestId('study-score')).not.toBeInTheDocument();
+  });
+
+  it('shows the session score when cards were answered', () => {
+    hook.value = { ...base(), current: null, score: { correct: 3, total: 4 } };
+    renderAt();
+    expect(screen.getByText('You got 3 of 4 correct.')).toBeInTheDocument();
+    expect(screen.getByTestId('study-score')).toHaveTextContent('75%');
   });
 });

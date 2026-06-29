@@ -68,3 +68,17 @@ Then('the study session advances past the first card', async ({ page }) => {
     )
     .toBe(true);
 });
+
+When('the user answers every card in the session', async ({ page }) => {
+  // Answer-then-Next until the done screen appears (bounded loop).
+  for (let i = 0; i < 50; i++) {
+    if (await page.getByTestId('study-done').isVisible()) break;
+    await page.getByTestId('study-opt').first().click();
+    await page.getByTestId('study-next').click();
+  }
+});
+
+Then('a session score summary is shown', async ({ page }) => {
+  await expect(page.getByTestId('study-done')).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByTestId('study-score')).toBeVisible();
+});

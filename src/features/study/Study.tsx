@@ -63,10 +63,19 @@ export function Study() {
         ) : (
           <EmptyState
             icon={checkmarkDoneCircleOutline}
-            title="All caught up!"
-            message="No cards are due right now. Come back later to keep your streak going."
+            title={s.score.total > 0 ? 'Session complete!' : 'All caught up!'}
+            message={
+              s.score.total > 0
+                ? `You got ${s.score.correct} of ${s.score.total} correct.`
+                : 'No cards are due right now. Come back later to keep your streak going.'
+            }
             testId="study-done"
           >
+            {s.score.total > 0 && (
+              <p className="study__score" data-testid="study-score">
+                {Math.round((s.score.correct / s.score.total) * 100)}%
+              </p>
+            )}
             <Link to={`/decks/${id}`} className="empty-state__cta">
               Back to deck
             </Link>
