@@ -7,9 +7,10 @@ const base = () => ({
   isAuthenticated: true,
   isLoading: false,
   current: null as null | { card: { id: string; front: string; back: string } },
-  revealed: false,
-  reveal: vi.fn(),
-  grade: vi.fn(),
+  choices: null as null | { answer: string; options: string[] },
+  picked: null as string | null,
+  answer: vi.fn(),
+  next: vi.fn(),
   done: false,
   reset: vi.fn(),
   direction: 'front' as 'front' | 'back',
@@ -47,6 +48,7 @@ describe('Study', () => {
     hook.value = {
       ...base(),
       current: { card: { id: 'c1', front: 'a', back: 'A' } },
+      choices: { answer: 'A', options: ['A', 'B'] },
       position: { index: 0, total: 3 },
     };
     renderAt();

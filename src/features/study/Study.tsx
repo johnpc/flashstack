@@ -36,7 +36,7 @@ export function Study() {
           </p>
         ) : s.isLoading ? (
           <p className="fs-muted">Loading…</p>
-        ) : s.current ? (
+        ) : s.current && s.choices ? (
           <>
             <div className="study__bar">
               <span className="fs-muted study__progress" data-testid="study-progress">
@@ -53,10 +53,11 @@ export function Study() {
             </div>
             <StudyCard
               card={s.current.card}
-              revealed={s.revealed}
+              choices={s.choices}
               direction={s.direction}
-              onReveal={s.reveal}
-              onGrade={s.grade}
+              picked={s.picked}
+              onAnswer={s.answer}
+              onNext={s.next}
             />
           </>
         ) : (

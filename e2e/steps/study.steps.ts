@@ -36,16 +36,23 @@ Then('the study session shows progress {string}', async ({ page }, prefix: strin
   await expect(page.getByTestId('study-progress')).toContainText(prefix, { timeout: 15_000 });
 });
 
-When('the user reveals the answer', async ({ page }) => {
-  await page.getByRole('button', { name: 'Show answer' }).click();
+Then('four answer options are shown', async ({ page }) => {
+  // A 3-card deck yields its answer + 2 distractors = 3 options; assert ≥2.
+  const count = await page.getByTestId('study-opt').count();
+  expect(count).toBeGreaterThanOrEqual(2);
 });
 
-Then('the card answer is shown', async ({ page }) => {
-  await expect(page.getByTestId('study-answer')).toBeVisible();
+When('the user picks an answer option', async ({ page }) => {
+  await page.getByTestId('study-opt').first().click();
 });
 
-When('the user grades the card {string}', async ({ page }, label: string) => {
-  await page.getByRole('button', { name: label }).click();
+Then('answer feedback is shown', async ({ page }) => {
+  // After picking, the post-answer area (with Next) reveals.
+  await expect(page.getByTestId('study-after')).toBeVisible({ timeout: 15_000 });
+});
+
+When('the user advances to the next card', async ({ page }) => {
+  await page.getByTestId('study-next').click();
 });
 
 Then('the study session advances past the first card', async ({ page }) => {

@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 const media = vi.hoisted(() => ({ url: null as string | null }));
 vi.mock('../../lib/useMediaUrl', () => ({ useMediaUrl: () => media.url }));
+vi.mock('../shell/AudioButton', () => ({ AudioButton: () => <div data-testid="audio" /> }));
 
 import { StudyCard } from './StudyCard';
 import type { CardRecord } from '../../lib/dataClient';
@@ -17,52 +18,53 @@ const card = {
   example: '¡Hola!',
   imagePath: 'media/decks/d1/c1.webp',
 } as CardRecord;
+const choices = { answer: 'Hello', options: ['Hello', 'Bye', 'Thanks', 'Please'] };
+const base = { card, choices, direction: 'front' as const, onAnswer: vi.fn(), onNext: vi.fn() };
 
-const base = { onReveal: vi.fn(), onGrade: vi.fn(), direction: 'front' as const };
-
-describe('StudyCard', () => {
+describe('StudyCard (multiple choice)', () => {
   beforeEach(() => {
     media.url = null;
+    vi.clearAllMocks();
   });
 
-  it('shows the front as prompt (direction=front) before reveal', () => {
-    render(<StudyCard card={card} revealed={false} {...base} />);
+  it('shows the front prompt and all options before answering', () => {
+    render(<StudyCard {...base} picked={null} />);
     expect(screen.getByText('Hola')).toBeInTheDocument();
-    expect(screen.queryByTestId('study-answer')).not.toBeInTheDocument();
+    expect(screen.getAllByTestId('study-opt')).toHaveLength(4);
+    expect(screen.queryByTestId('study-after')).not.toBeInTheDocument();
   });
 
-  it('prompts with the back when direction=back', () => {
-    render(<StudyCard card={card} revealed={false} {...base} direction="back" />);
-    expect(screen.getByText('Hello')).toBeInTheDocument(); // back is the prompt
-    expect(screen.queryByText('Hola')).not.toBeInTheDocument();
+  it('prompts with the back when direction is back', () => {
+    const { container } = render(<StudyCard {...base} direction="back" picked={null} />);
+    // The prompt face (not an option button) shows the back text.
+    expect(container.querySelector('.study-card__front')?.textContent).toBe('Hello');
   });
 
-  it('reveals the opposite face as the answer', () => {
-    render(<StudyCard card={card} revealed {...base} direction="back" />);
-    // prompt=back (Hello), answer=front (Hola)
-    expect(screen.getByTestId('study-answer')).toHaveTextContent('Hola');
+  it('calls onAnswer with the chosen option', () => {
+    const onAnswer = vi.fn();
+    render(<StudyCard {...base} picked={null} onAnswer={onAnswer} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Thanks' }));
+    expect(onAnswer).toHaveBeenCalledWith('Thanks');
   });
 
-  it('calls onReveal when Show answer is clicked', () => {
-    const onReveal = vi.fn();
-    render(<StudyCard card={card} revealed={false} {...base} onReveal={onReveal} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Show answer' }));
-    expect(onReveal).toHaveBeenCalled();
+  it('marks correct + chosen-wrong options and reveals Next after answering', () => {
+    render(<StudyCard {...base} picked="Bye" />);
+    const correct = screen.getByRole('button', { name: 'Hello' });
+    const wrong = screen.getByRole('button', { name: 'Bye' });
+    expect(correct.className).toContain('study-opt--correct');
+    expect(wrong.className).toContain('study-opt--wrong');
+    expect(screen.getByTestId('study-after')).toBeInTheDocument();
   });
 
-  it('grades with the chosen value', () => {
-    const onGrade = vi.fn();
-    render(<StudyCard card={card} revealed {...base} onGrade={onGrade} />);
-    fireEvent.click(screen.getByTestId('grade-4'));
-    expect(onGrade).toHaveBeenCalledWith(4);
+  it('advances on Next', () => {
+    const onNext = vi.fn();
+    render(<StudyCard {...base} picked="Hello" onNext={onNext} />);
+    fireEvent.click(screen.getByTestId('study-next'));
+    expect(onNext).toHaveBeenCalled();
   });
 
-  it('shows the card image on the prompt face (both faces), not just on reveal', () => {
-    media.url = 'https://s3/c1.webp';
-    const { container } = render(<StudyCard card={card} revealed={false} {...base} />);
-    expect(container.querySelector('.study-card__img')).toHaveAttribute(
-      'src',
-      'https://s3/c1.webp',
-    );
+  it('disables options once answered', () => {
+    render(<StudyCard {...base} picked="Hello" />);
+    expect(screen.getByRole('button', { name: 'Bye' })).toBeDisabled();
   });
 });

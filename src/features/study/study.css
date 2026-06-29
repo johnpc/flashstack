@@ -73,31 +73,51 @@
   margin: 4px 0 12px;
 }
 
-.study-card__grades {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin-top: 20px;
+/* --- Multiple-choice options --- */
+.study-card__options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
 }
 
-.study-card__grade {
+.study-opt {
+  width: 100%;
   border: 1px solid var(--fs-border);
-  border-radius: 10px;
-  padding: 12px 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  border-radius: var(--fs-radius-sm);
+  padding: 14px 16px;
+  font-size: 1rem;
+  font-weight: 500;
   background: var(--fs-surface);
   color: var(--fs-text);
+  text-align: left;
+  transition:
+    border-color 0.12s ease,
+    background 0.12s ease;
 }
 
-.study-card__grade--correct {
+.study-opt:active {
+  border-color: var(--fs-accent);
+}
+
+.study-opt--correct {
   border-color: var(--fs-correct);
+  background: color-mix(in srgb, var(--fs-correct) 12%, transparent);
   color: var(--fs-correct);
 }
 
-.study-card__grade--incorrect {
+.study-opt--wrong {
   border-color: var(--fs-incorrect);
+  background: color-mix(in srgb, var(--fs-incorrect) 12%, transparent);
   color: var(--fs-incorrect);
+}
+
+.study-opt--dim {
+  opacity: 0.5;
+}
+
+.study-card__after {
+  margin-top: 16px;
 }
 
 .study__back-link {

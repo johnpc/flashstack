@@ -73,9 +73,10 @@ When('the learner opens that deck and studies it', async ({ page }) => {
 });
 
 Then('the learner can reveal and grade a card', async ({ page }) => {
-  await page.getByRole('button', { name: 'Show answer' }).click();
-  await expect(page.getByTestId('study-answer')).toBeVisible({ timeout: 15_000 });
-  await page.getByTestId('grade-4').click();
+  // Multiple choice: pick an option, then advance.
+  await page.getByTestId('study-opt').first().click();
+  await expect(page.getByTestId('study-after')).toBeVisible({ timeout: 15_000 });
+  await page.getByTestId('study-next').click();
   // After grading, either the next card or the all-caught-up state shows.
   await expect
     .poll(

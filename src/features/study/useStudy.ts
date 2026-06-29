@@ -2,15 +2,18 @@ import { useCallback, useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchStudyData, gradeCard } from './studyApi';
 import { buildStudyQueue } from './buildStudyQueue';
+import { buildChoices } from './buildChoices';
+import { gradeForChoice } from './answerGrade';
 import { useAuth } from '../auth/useAuth';
 
-/** Drives a study session: load cards + reviews, walk the queue, self-grade. */
+/** Drives a multiple-choice study session: load cards + reviews, walk the
+ * queue, present choices, and auto-grade each answer. */
 export function useStudy(deckId: string | undefined) {
   const { status } = useAuth();
   const enabled = status === 'authenticated' && !!deckId;
   const queryClient = useQueryClient();
   const [index, setIndex] = useState(0);
-  const [revealed, setRevealed] = useState(false);
+  const [picked, setPicked] = useState<string | null>(null);
   // Which face is the prompt: 'front' (recall the back) or 'back' (recall front).
   const [direction, setDirection] = useState<'front' | 'back'>('front');
 
@@ -20,8 +23,6 @@ export function useStudy(deckId: string | undefined) {
     enabled,
   });
 
-  // Build the queue once per load so grading mid-session doesn't reshuffle the
-  // cards out from under the user (the next due date only matters next session).
   const queue = useMemo(
     () => (data ? buildStudyQueue(data.cards, data.reviews, new Date()) : []),
     [data],
@@ -29,36 +30,52 @@ export function useStudy(deckId: string | undefined) {
   const current = queue[index] ?? null;
   const done = !isLoading && queue.length > 0 && index >= queue.length;
 
-  const grade = useCallback(
-    async (value: number) => {
-      if (!current || !deckId) return;
-      await gradeCard(deckId, current.card.id, current.review, value);
-      setRevealed(false);
-      setIndex((i) => i + 1);
-    },
-    [current, deckId],
+  // Choices are derived per card+direction; memoized so picking doesn't reshuffle.
+  const choices = useMemo(
+    () => (current && data ? buildChoices(current.card, data.cards, direction) : null),
+    [current, data, direction],
   );
+
+  // Answer with a chosen option: record the pick (for feedback) and grade once.
+  const answer = useCallback(
+    async (choice: string) => {
+      if (!current || !deckId || !choices || picked) return;
+      setPicked(choice);
+      await gradeCard(
+        deckId,
+        current.card.id,
+        current.review,
+        gradeForChoice(choice, choices.answer),
+      );
+    },
+    [current, deckId, choices, picked],
+  );
+
+  const next = useCallback(() => {
+    setPicked(null);
+    setIndex((i) => i + 1);
+  }, []);
 
   const reset = useCallback(async () => {
     setIndex(0);
-    setRevealed(false);
+    setPicked(null);
     await queryClient.invalidateQueries({ queryKey: ['study', deckId] });
   }, [queryClient, deckId]);
 
-  // Flipping direction restarts the session from the first card on the new face.
   const toggleDirection = useCallback(() => {
     setDirection((d) => (d === 'front' ? 'back' : 'front'));
     setIndex(0);
-    setRevealed(false);
+    setPicked(null);
   }, []);
 
   return {
     isAuthenticated: status === 'authenticated',
     isLoading: enabled && isLoading,
     current,
-    revealed,
-    reveal: () => setRevealed(true),
-    grade,
+    choices,
+    picked,
+    answer,
+    next,
     done,
     reset,
     direction,

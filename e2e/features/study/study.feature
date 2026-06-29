@@ -1,19 +1,20 @@
-Feature: Study a deck (authenticated)
+Feature: Study a deck (authenticated, multiple choice)
   As a signed-in learner
-  I want to play a deck and self-grade each card
-  So that spaced repetition focuses my future study on what I find hard
+  I want to answer multiple-choice questions
+  So that spaced repetition auto-grades which cards are hard for me
 
   # Honest e2e + ADR-0004 guard: the study queue reads the deck's cards (public)
   # and the user's own UserCardReview rows (owner/userPool). This journey signs
-  # in, opens a seeded deck, reveals an answer and grades it — asserting on real
-  # rendered card data and a real progress advance, not just navigation.
+  # in, opens a seeded deck, picks an option, and advances — asserting on real
+  # rendered choices and a real progress advance, not just navigation.
   # Skips automatically when TEST_USERNAME / TEST_PASSWORD are unset.
 
-  Scenario: A signed-in user studies a deck and grades a card
+  Scenario: A signed-in user answers a multiple-choice card
     Given the study test user signs in
     When the user starts studying the "Top Spanish Phrases" deck
     Then the study session shows progress "1 /"
-    When the user reveals the answer
-    Then the card answer is shown
-    When the user grades the card "Good"
+    And four answer options are shown
+    When the user picks an answer option
+    Then answer feedback is shown
+    When the user advances to the next card
     Then the study session advances past the first card

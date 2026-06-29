@@ -37,27 +37,65 @@ describe('useStudy', () => {
     expect(api.fetchStudyData).not.toHaveBeenCalled();
   });
 
-  it('exposes the first queued card and its position', async () => {
+  it('exposes the first queued card, its choices, and position', async () => {
     api.fetchStudyData.mockResolvedValue(twoNewCards);
     const { result } = renderHook(() => useStudy('d1'), { wrapper });
     await waitFor(() => expect(result.current.current?.card.id).toBe('c1'));
     expect(result.current.position).toEqual({ index: 0, total: 2 });
+    // Choices include the correct answer (back face, direction=front) + a distractor.
+    expect(result.current.choices?.answer).toBe('A');
+    expect(result.current.choices?.options).toEqual(expect.arrayContaining(['A', 'B']));
   });
 
-  it('grades a card, advances, and finishes the queue', async () => {
+  it('grades a correct pick as a pass (4)', async () => {
     api.fetchStudyData.mockResolvedValue({ ...twoNewCards, cards: [twoNewCards.cards[0]] });
     const { result } = renderHook(() => useStudy('d1'), { wrapper });
     await waitFor(() => expect(result.current.current?.card.id).toBe('c1'));
-    await act(async () => result.current.grade(5));
-    expect(api.gradeCard).toHaveBeenCalledWith('d1', 'c1', null, 5);
-    await waitFor(() => expect(result.current.done).toBe(true));
+    await act(async () => result.current.answer('A')); // correct (back of c1)
+    expect(api.gradeCard).toHaveBeenCalledWith('d1', 'c1', null, 4);
+    expect(result.current.picked).toBe('A');
   });
 
-  it('reveals the answer', async () => {
+  it('grades a wrong pick as a lapse (1), then advances on next', async () => {
     api.fetchStudyData.mockResolvedValue(twoNewCards);
     const { result } = renderHook(() => useStudy('d1'), { wrapper });
-    await waitFor(() => expect(result.current.current).toBeTruthy());
-    act(() => result.current.reveal());
-    expect(result.current.revealed).toBe(true);
+    await waitFor(() => expect(result.current.current?.card.id).toBe('c1'));
+    await act(async () => result.current.answer('B')); // wrong for c1 (whose answer is 'A')
+    expect(api.gradeCard).toHaveBeenCalledWith('d1', 'c1', null, 1);
+    act(() => result.current.next());
+    await waitFor(() => expect(result.current.current?.card.id).toBe('c2'));
+    expect(result.current.picked).toBeNull();
+  });
+
+  it('ignores a second answer on the same card (no double-grade)', async () => {
+    api.fetchStudyData.mockResolvedValue(twoNewCards);
+    const { result } = renderHook(() => useStudy('d1'), { wrapper });
+    await waitFor(() => expect(result.current.current?.card.id).toBe('c1'));
+    await act(async () => result.current.answer('A'));
+    await act(async () => result.current.answer('B'));
+    expect(api.gradeCard).toHaveBeenCalledTimes(1);
+  });
+
+  it('toggleDirection flips the prompt face and restarts from the first card', async () => {
+    api.fetchStudyData.mockResolvedValue(twoNewCards);
+    const { result } = renderHook(() => useStudy('d1'), { wrapper });
+    await waitFor(() => expect(result.current.choices?.answer).toBe('A')); // back face
+    act(() => result.current.next()); // move off the first card
+    await waitFor(() => expect(result.current.current?.card.id).toBe('c2'));
+    act(() => result.current.toggleDirection());
+    expect(result.current.direction).toBe('back');
+    expect(result.current.position.index).toBe(0); // restarted
+    await waitFor(() => expect(result.current.choices?.answer).toBe('a')); // now front face
+  });
+
+  it('reset clears the pick and returns to the first card', async () => {
+    api.fetchStudyData.mockResolvedValue(twoNewCards);
+    const { result } = renderHook(() => useStudy('d1'), { wrapper });
+    await waitFor(() => expect(result.current.current?.card.id).toBe('c1'));
+    await act(async () => result.current.answer('A'));
+    expect(result.current.picked).toBe('A');
+    await act(async () => result.current.reset());
+    expect(result.current.picked).toBeNull();
+    expect(result.current.position.index).toBe(0);
   });
 });
