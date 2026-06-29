@@ -54,3 +54,11 @@ Then('{string} is listed in My Decks', async ({ page }, topic: string) => {
     timeout: 15_000,
   });
 });
+
+Then("the Due Today panel reflects the saved deck's due cards", async ({ page }) => {
+  // The suite reseeds before running, so the saved deck's cards are new =>
+  // due, and the cross-deck panel surfaces it with a study link.
+  const panel = page.getByTestId('due-today');
+  await expect(panel).toBeVisible({ timeout: 15_000 });
+  await expect(panel.getByTestId('due-deck').first()).toBeVisible();
+});

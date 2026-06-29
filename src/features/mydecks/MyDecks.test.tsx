@@ -5,6 +5,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 type MyDecksState = { decks: unknown[]; isLoading: boolean; isAuthenticated: boolean };
 const hook = vi.hoisted(() => ({ value: {} as MyDecksState }));
 vi.mock('./useMyDecks', () => ({ useMyDecks: () => hook.value }));
+// DueTodayPanel does its own cross-deck fetch — stub it out of this list test.
+vi.mock('./DueTodayPanel', () => ({ DueTodayPanel: () => null }));
 
 import { MyDecks } from './MyDecks';
 

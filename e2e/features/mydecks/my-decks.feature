@@ -15,3 +15,4 @@ Feature: My Decks (authenticated)
     Then the deck button shows it is in My Decks
     When the test user opens the My Decks tab
     Then "Top Spanish Phrases" is listed in My Decks
+    And the Due Today panel reflects the saved deck's due cards

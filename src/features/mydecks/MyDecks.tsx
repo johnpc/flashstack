@@ -2,6 +2,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/rea
 import { libraryOutline, compassOutline } from 'ionicons/icons';
 import { Link } from 'react-router-dom';
 import { useMyDecks } from './useMyDecks';
+import { DueTodayPanel } from './DueTodayPanel';
 import { TabBar } from '../shell/TabBar';
 import { EmptyState } from '../shell/EmptyState';
 import './mydecks.css';
@@ -42,16 +43,19 @@ export function MyDecks() {
             </Link>
           </EmptyState>
         ) : (
-          <ul className="my-decks" aria-label="Saved decks">
-            {decks.map((deck) => (
-              <li key={deck.id} data-testid="my-deck">
-                <Link to={`/decks/${deck.deckId}`} className="my-decks__row">
-                  <span className="fs-heading my-decks__topic">{deck.topic}</span>
-                  <span className="my-decks__count">{deck.cardCount ?? 0} cards</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <>
+            <DueTodayPanel />
+            <ul className="my-decks" aria-label="Saved decks">
+              {decks.map((deck) => (
+                <li key={deck.id} data-testid="my-deck">
+                  <Link to={`/decks/${deck.deckId}`} className="my-decks__row">
+                    <span className="fs-heading my-decks__topic">{deck.topic}</span>
+                    <span className="my-decks__count">{deck.cardCount ?? 0} cards</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </>
         )}
         <TabBar active="My Decks" />
       </IonContent>
