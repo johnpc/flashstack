@@ -39,7 +39,12 @@ export default defineConfig({
         'amplify/**/resource.ts',
         'amplify/backend.ts',
         'amplify/seed/fixtures/**',
+        // Seed/maintenance runner entrypoints: side-effecting main() scripts
+        // (sign in, mutate, exit) with no unit-testable surface — their logic
+        // lives in tested helpers (seedReference, resizeImage). Run manually.
         'amplify/seed/seed.ts',
+        'amplify/seed/seedCategories.ts',
+        'amplify/seed/backfillMedia.ts',
       ],
       thresholds: {
         statements: 80,

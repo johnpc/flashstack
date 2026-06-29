@@ -12,6 +12,7 @@
     "e2e-config": "ampx generate outputs --stack amplify-flashstack-xss-sandbox-36f6fbd736 --profile personal",
     "seed": "tsx amplify/seed/seed.ts",
     "seed:categories": "tsx amplify/seed/seedCategories.ts",
+    "backfill:media": "tsx amplify/seed/backfillMedia.ts",
     "layer:sharp": "bash scripts/build-sharp-layer.sh",
     "test": "vitest run",
     "test.unit": "vitest run",
