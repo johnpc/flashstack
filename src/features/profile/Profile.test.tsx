@@ -7,6 +7,7 @@ const auth = vi.hoisted(() => ({ value: {} as Auth }));
 const editor = vi.hoisted(() => ({ isEditor: false }));
 vi.mock('../auth/useAuth', () => ({ useAuth: () => auth.value }));
 vi.mock('../admin/useIsEditor', () => ({ useIsEditor: () => editor }));
+vi.mock('../stats/StreakCard', () => ({ StreakCard: () => <div data-testid="streak" /> }));
 
 import { Profile } from './Profile';
 

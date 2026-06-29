@@ -3,6 +3,7 @@ import { personCircleOutline } from 'ionicons/icons';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
 import { useIsEditor } from '../admin/useIsEditor';
+import { StreakCard } from '../stats/StreakCard';
 import { TabBar } from '../shell/TabBar';
 import { EmptyState } from '../shell/EmptyState';
 import './profile.css';
@@ -39,6 +40,8 @@ export function Profile() {
         </p>
         {isEditor && <span className="profile__badge">Editor</span>}
       </div>
+
+      <StreakCard />
 
       {isEditor && (
         <Link to="/admin/decks" className="profile__row" data-testid="profile-manage">

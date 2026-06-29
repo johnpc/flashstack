@@ -19,8 +19,10 @@ Feature: Study a deck (authenticated, multiple choice)
     When the user advances to the next card
     Then the study session advances past the first card
 
-  Scenario: Finishing a session shows a score summary
+  Scenario: Finishing a session shows a score summary and counts toward the streak
     Given the study test user signs in
     When the user starts studying the "Top Spanish Phrases" deck
     And the user answers every card in the session
     Then a session score summary is shown
+    When the user opens the You tab
+    Then a study streak of at least 1 day is shown

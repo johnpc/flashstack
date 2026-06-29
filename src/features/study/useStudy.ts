@@ -4,6 +4,7 @@ import { fetchStudyData, gradeCard } from './studyApi';
 import { buildStudyQueue } from './buildStudyQueue';
 import { buildChoices } from './buildChoices';
 import { gradeForChoice } from './answerGrade';
+import { useRecordOnDone } from './useRecordOnDone';
 import { useAuth } from '../auth/useAuth';
 
 /** Drives a multiple-choice study session: load cards + reviews, walk the
@@ -59,6 +60,9 @@ export function useStudy(deckId: string | undefined) {
     setPicked(null);
     setIndex((i) => i + 1);
   }, []);
+
+  // Record the session (streak + totals) once when the queue is finished.
+  useRecordOnDone(done, queue.length);
 
   const reset = useCallback(async () => {
     setIndex(0);

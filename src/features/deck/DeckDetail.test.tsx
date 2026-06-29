@@ -5,6 +5,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 const hook = vi.hoisted(() => ({ value: {} as { data?: unknown; isLoading: boolean } }));
 vi.mock('./useDeckDetail', () => ({ useDeckDetail: () => hook.value }));
 // SaveDeckButton pulls in auth/router state — stub it to a marker.
+vi.mock('../stats/DeckMastery', () => ({ DeckMastery: () => null }));
 vi.mock('../mydecks/SaveDeckButton', () => ({
   SaveDeckButton: () => <button data-testid="save-deck">Add to My Decks</button>,
 }));

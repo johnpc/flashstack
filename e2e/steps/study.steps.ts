@@ -82,3 +82,27 @@ Then('a session score summary is shown', async ({ page }) => {
   await expect(page.getByTestId('study-done')).toBeVisible({ timeout: 15_000 });
   await expect(page.getByTestId('study-score')).toBeVisible();
 });
+
+When('the user opens the You tab', async ({ page }) => {
+  await page.goto('/you');
+});
+
+Then('a study streak of at least 1 day is shown', async ({ page }) => {
+  // The session records the streak async (best-effort, after the last card),
+  // so reload the You tab until useStat reflects it.
+  await expect
+    .poll(
+      async () => {
+        const n = Number(
+          (await page
+            .getByTestId('streak-current')
+            .textContent()
+            .catch(() => '0')) ?? '0',
+        );
+        if (n < 1) await page.reload();
+        return n;
+      },
+      { timeout: 20_000, intervals: [1000, 2000, 3000, 3000, 4000, 4000] },
+    )
+    .toBeGreaterThanOrEqual(1);
+});

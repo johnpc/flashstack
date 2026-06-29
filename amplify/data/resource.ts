@@ -123,6 +123,20 @@ const schema = a.schema({
     .secondaryIndexes((index) => [index('deckId').sortKeys(['dueAt'])])
     .authorization((allow) => [allow.owner()]),
 
+  // A user's study streak. Per-user, owner authz (userPool): one row per user,
+  // updated after each session. `lastStudiedDate` is a YYYY-MM-DD day stamp
+  // (not a timestamp) so the streak math is by calendar day; `current`/`longest`
+  // are the running + best consecutive-day counts. Mastery is NOT stored here —
+  // it's derived live from UserCardReview (repetitions), so it's always accurate.
+  UserStat: a
+    .model({
+      currentStreak: a.integer().default(0),
+      longestStreak: a.integer().default(0),
+      lastStudiedDate: a.string(),
+      totalReviews: a.integer().default(0),
+    })
+    .authorization((allow) => [allow.owner()]),
+
   // One AI deck-generation run — the admin dashboard reads these (stoop's
   // SyncRun analogue). The starter mutation creates a RUNNING row; the worker
   // flips it to DRAFT_READY (deck filled, awaiting edit/publish) or FAILED.

@@ -6,6 +6,7 @@ import type { ReactNode } from 'react';
 const api = vi.hoisted(() => ({ fetchStudyData: vi.fn(), gradeCard: vi.fn() }));
 const auth = vi.hoisted(() => ({ status: 'authenticated' as string }));
 vi.mock('./studyApi', () => api);
+vi.mock('./useRecordOnDone', () => ({ useRecordOnDone: vi.fn() }));
 vi.mock('../auth/useAuth', () => ({ useAuth: () => ({ status: auth.status }) }));
 
 import { useStudy } from './useStudy';
