@@ -70,12 +70,21 @@ Then('the study session advances past the first card', async ({ page }) => {
 });
 
 When('the user answers every card in the session', async ({ page }) => {
+  // Finishing fires recordSession (UserStat create/update) in the background.
+  // Wait for that write to LAND before the scenario navigates away: a full
+  // page.goto aborts in-flight requests, and the streak would never persist.
+  const statWrite = page.waitForResponse(
+    (r) => /(create|update)UserStat/.test(r.request().postData() ?? ''),
+    { timeout: 30_000 },
+  );
   // Answer-then-Next until the done screen appears (bounded loop).
   for (let i = 0; i < 50; i++) {
     if (await page.getByTestId('study-done').isVisible()) break;
     await page.getByTestId('study-opt').first().click();
     await page.getByTestId('study-next').click();
   }
+  const body = (await (await statWrite).json()) as { errors?: unknown[] };
+  expect(body.errors ?? []).toEqual([]);
 });
 
 Then('a session score summary is shown', async ({ page }) => {

@@ -4,12 +4,12 @@
  */
 import {
   getCurrentUser,
-  fetchAuthSession,
   signIn as amplifySignIn,
   signUp as amplifySignUp,
   confirmSignUp as amplifyConfirmSignUp,
   signOut as amplifySignOut,
 } from 'aws-amplify/auth';
+import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import type { SignUpResult } from './types';
 
 /** Returns the signed-in user's email, or null if there is no session. */
@@ -22,11 +22,16 @@ export async function currentEmail(): Promise<string | null> {
   }
 }
 
-/** Cognito groups for the signed-in user (from the id token), or []. */
+/**
+ * Cognito groups for the signed-in user (from the id token), or []. Reads the
+ * user-pool tokens directly — NOT fetchAuthSession, which also fetches
+ * identity-pool credentials and throws on any transient failure there, which
+ * made a real editor look like a non-editor (EditorGate → /discover).
+ */
 export async function currentGroups(): Promise<string[]> {
   try {
-    const session = await fetchAuthSession();
-    const claim = session.tokens?.idToken?.payload['cognito:groups'];
+    const tokens = await cognitoUserPoolsTokenProvider.getTokens();
+    const claim = tokens?.idToken?.payload['cognito:groups'];
     return Array.isArray(claim) ? claim.map(String) : [];
   } catch {
     return [];

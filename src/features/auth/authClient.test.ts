@@ -2,13 +2,16 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
   getCurrentUser: vi.fn(),
-  fetchAuthSession: vi.fn(),
+  getTokens: vi.fn(),
   signIn: vi.fn(),
   signUp: vi.fn(),
   confirmSignUp: vi.fn(),
   signOut: vi.fn(),
 }));
 vi.mock('aws-amplify/auth', () => mocks);
+vi.mock('aws-amplify/auth/cognito', () => ({
+  cognitoUserPoolsTokenProvider: { getTokens: mocks.getTokens },
+}));
 
 import * as authClient from './authClient';
 
@@ -36,16 +39,18 @@ describe('authClient', () => {
   });
 
   it('currentGroups reads the cognito:groups claim', async () => {
-    mocks.fetchAuthSession.mockResolvedValue({
-      tokens: { idToken: { payload: { 'cognito:groups': ['editors', 'beta'] } } },
+    mocks.getTokens.mockResolvedValue({
+      idToken: { payload: { 'cognito:groups': ['editors', 'beta'] } },
     });
     expect(await authClient.currentGroups()).toEqual(['editors', 'beta']);
   });
 
   it('currentGroups returns [] when the claim is absent or session fails', async () => {
-    mocks.fetchAuthSession.mockResolvedValue({ tokens: { idToken: { payload: {} } } });
+    mocks.getTokens.mockResolvedValue({ idToken: { payload: {} } });
     expect(await authClient.currentGroups()).toEqual([]);
-    mocks.fetchAuthSession.mockRejectedValue(new Error('no session'));
+    mocks.getTokens.mockRejectedValue(new Error('no session'));
+    expect(await authClient.currentGroups()).toEqual([]);
+    mocks.getTokens.mockResolvedValue(null);
     expect(await authClient.currentGroups()).toEqual([]);
   });
 

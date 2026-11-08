@@ -102,7 +102,7 @@ npm run quality        # full local gate: lint + check:lines + coverage + crap +
 npm run format         # Prettier write (run before committing)
 npm run test:e2e       # Gherkin acceptance tests (bddgen + Playwright)
 npm run seed           # seed Discover categories (idempotent; needs editor creds)
-npm run e2e-config     # pull amplify_outputs.json from the sandbox stack
+npm run e2e-config     # pull amplify_outputs.json from your sandbox (SANDBOX_IDENTIFIER or $USER)
 npx ampx sandbox       # personal cloud backend sandbox
 ```
 
@@ -110,8 +110,12 @@ npx ampx sandbox       # personal cloud backend sandbox
 
 - **Repo:** `johnpc/flashstack` (public).
 - **iOS bundle id:** `com.johncorser.flashstack`. Region `us-west-2`, AWS profile `personal`.
-- **Sandbox stack:** `amplify-flashstack-xss-sandbox-36f6fbd736` (used by `e2e-config`).
-- **CI:** `.github/workflows/ci.yml` (quality + Gherkin acceptance) blocks PRs.
+- **Sandboxes:** `scripts/sandbox.mjs` derives the stack name from an identifier (`--id` →
+  `SANDBOX_IDENTIFIER` → system user), so locally `e2e-config` targets your own `<user>` sandbox.
+  CI never uses a dev sandbox: each run deploys its own `ci-<run_id>` sandbox, creates the test
+  user in its fresh Cognito pool (`sandbox:ensure-editor`), seeds, tests, and always deletes it in
+  the final `teardown` job. `sandbox-cleanup.yml` sweeps leaked `ci-*` sandboxes older than 6h.
+- **CI:** `.github/workflows/ci.yml` (per-run sandbox + quality + Gherkin acceptance) blocks PRs.
   `ios-deploy.yml` / `android-deploy.yml` publish after CI on `main`. Secrets: `AWS_ACCESS_KEY_ID`,
   `AWS_SECRET_ACCESS_KEY`, `TEST_USERNAME`, `TEST_PASSWORD`, `ASC_KEY_ID`, `ASC_ISSUER_ID`,
   `ASC_KEY_CONTENT`, `TEAM_ID`.
