@@ -8,16 +8,21 @@
  * provider mismatch returns empty results, not an error.
  */
 import { generateClient } from 'aws-amplify/data';
-import { fetchAuthSession } from 'aws-amplify/auth';
+import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import type { Schema } from '../../amplify/data/resource';
 
 export const dataClient = generateClient<Schema>({ authMode: 'identityPool' });
 
-/** 'userPool' when a Cognito session exists, else 'identityPool' (guest). */
+/**
+ * 'userPool' when a Cognito session exists, else 'identityPool' (guest). Reads
+ * the user-pool tokens directly, not fetchAuthSession: that also fetches
+ * identity-pool credentials and throws on any transient failure there, which
+ * silently downgraded a signed-in user to guest reads (empty owner data).
+ */
 export async function readAuthMode(): Promise<'userPool' | 'identityPool'> {
   try {
-    const session = await fetchAuthSession();
-    return session.tokens?.accessToken ? 'userPool' : 'identityPool';
+    const tokens = await cognitoUserPoolsTokenProvider.getTokens();
+    return tokens?.accessToken ? 'userPool' : 'identityPool';
   } catch {
     return 'identityPool';
   }

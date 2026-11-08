@@ -24,14 +24,17 @@ Given('the test user signs in', async ({ page }) => {
   );
 });
 
-When('the test user opens the {string} deck', async ({ page }, topic: string) => {
-  await page.goto('/discover/languages');
-  await page
-    .getByTestId('deck-card')
-    .filter({ hasText: new RegExp(topic) })
-    .click();
-  await expect(page.getByTestId('deck-title')).toContainText(topic);
-});
+When(
+  'the test user opens the {string} deck in {string}',
+  async ({ page }, topic: string, category: string) => {
+    await page.goto(`/discover/${category}`);
+    await page
+      .getByTestId('deck-card')
+      .filter({ hasText: new RegExp(topic) })
+      .click();
+    await expect(page.getByTestId('deck-title')).toContainText(topic);
+  },
+);
 
 When('the test user adds the deck to My Decks', async ({ page }) => {
   const btn = page.getByTestId('save-deck');
