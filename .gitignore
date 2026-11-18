@@ -48,3 +48,6 @@ amplifyconfiguration*
 
 # Apple signing keys — never commit
 *.p8
+
+# iOS launch smoke output (scripts/ios-launch-smoke.sh)
+ios-smoke-output/
