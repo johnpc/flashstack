@@ -6,6 +6,9 @@ backend:
   phases:
     preBuild:
       commands:
+        # The official Node 26 Linux binary links libatomic.so.1, which the Amplify
+        # build image does not ship ("error while loading shared libraries").
+        - if command -v dnf >/dev/null; then dnf install -y libatomic; else yum install -y libatomic; fi
         - nvm install 26
         - nvm use 26
         - node --version
