@@ -9,6 +9,12 @@ export default defineConfig({
   plugins: [react(), legacy()],
   test: {
     globals: true,
+    // Node 26 defines `globalThis.localStorage` as an OWN property whose value is
+    // `undefined` (Web Storage without --localstorage-file). The jsdom environment
+    // never overwrites an existing global, so tests would see no localStorage.
+    // Every vitest script in package.json therefore runs with
+    // NODE_OPTIONS=--no-experimental-webstorage, which removes Node's property so
+    // jsdom's real Storage comes through (locally, in the pre-commit hook and CI).
     environment: 'jsdom',
     setupFiles: './src/setupTests.ts',
     // Generous timeout so async hook/waitFor tests don't flake under the CPU
