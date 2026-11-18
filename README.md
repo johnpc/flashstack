@@ -11,6 +11,10 @@ model so the Discover tab, library, and study flows never care how a deck was ma
 > Architecture, quality bar, and toolchain are modeled on the **stoop** app — same Ionic + Amplify
 > Gen2 stack, the same strict CI gates, and the same Gherkin-first → full-e2e workflow.
 
+> **Platform status: web only (for now).** The web app is the supported platform. The iOS and
+> Android projects stay in the repo but are not published or deployed, and the iOS Deploy and
+> Android Deploy workflows are disabled in GitHub Actions (re-enable with `gh workflow enable`).
+
 ---
 
 ## Status
