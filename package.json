@@ -112,5 +112,12 @@
     "vite": "^5.0.0",
     "vitest": "^0.34.6"
   },
-  "description": "Flashstack — AI-generated flashcard decks with spaced repetition"
+  "description": "Flashstack — AI-generated flashcard decks with spaced repetition",
+  "allowScripts": {
+    "esbuild": true,
+    "sharp": true,
+    "@parcel/watcher": true,
+    "core-js": false,
+    "fsevents": false
+  }
 }
