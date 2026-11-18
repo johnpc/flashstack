@@ -1,0 +1,30 @@
+version: 1
+# Amplify Hosting build for the `main` branch (backend deploy + web build).
+# Mirrors the console build spec, plus pins Node to the version in .nvmrc (26)
+# so the hosted build runs the same Node as CI and local dev.
+backend:
+  phases:
+    preBuild:
+      commands:
+        - nvm install 26
+        - nvm use 26
+        - node --version
+    build:
+      commands:
+        - npm ci --cache .npm --prefer-offline
+        - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - nvm use 26
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - .npm/**/*
